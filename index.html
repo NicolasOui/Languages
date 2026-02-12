@@ -8,133 +8,175 @@
         :root {
             --primary: #2563eb;
             --primary-glow: rgba(37, 99, 235, 0.4);
-            --bg: #f8fafc;
-            --text-main: #1e293b;
+            --accent: #facc15;
+            --text-main: #0f172a;
             --text-sub: #64748b;
+            --bg: #f8fafc;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
-            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 100%; max-width: 1280px; padding: 40px 20px;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
+            width: 100%;
+            max-width: 1280px; /* Контентная область по ТЗ */
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         h1 {
-            font-size: clamp(3.5rem, 12vw, 6rem); font-weight: 800; margin: 0;
-            letter-spacing: 0.12em; text-transform: uppercase;
+            font-size: clamp(3.5rem, 12vw, 6rem);
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 0.12em; /* Ваш элитный интервал */
+            text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .subtitle { font-size: 1.2rem; color: var(--text-sub); margin: 15px 0 30px 0; letter-spacing: 0.05em; }
+        .subtitle {
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            color: var(--text-sub);
+            margin: 15px 0 40px 0;
+            letter-spacing: 0.05em;
+        }
 
-        /* ГЛАВНАЯ СЦЕНА */
+        /* ЦЕНТРАЛЬНАЯ АНИМАЦИЯ */
         .scene {
-            width: 300px; height: 320px;
+            width: 300px;
+            height: 300px;
             position: relative;
-            display: flex; justify-content: center; align-items: flex-end;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
         }
 
-        /* ПАРИТЕТНАЯ ШАПОЧКА */
         .hat {
-            font-size: 60px;
-            position: absolute;
-            top: 20px;
-            z-index: 30;
-            animation: hat-float 3s infinite ease-in-out;
-            filter: drop-shadow(0 15px 10px rgba(0,0,0,0.15));
-        }
-
-        /* ПЕРСОНАЖ: БИЛЛ (Emoji) */
-        .dog-bill {
-            font-size: 160px; /* Огромная детализированная собака */
-            line-height: 1;
+            font-size: 100px; /* Увеличенный размер для фокуса */
             z-index: 10;
-            position: relative;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
-            animation: head-tilt 4s infinite;
+            filter: drop-shadow(0 20px 20px rgba(0,0,0,0.15));
+            animation: hat-float 4s infinite ease-in-out;
+            user-select: none;
         }
 
-        /* ЛАПА ДЛЯ ЧЕСАНИЯ */
-        .scratch-paw {
-            font-size: 50px;
-            position: absolute;
-            right: 40px;
-            bottom: 120px;
-            z-index: 20;
-            opacity: 0;
-            animation: scratch-action 4s infinite;
-        }
-
-        /* МАГИЧЕСКИЕ ИСКРЫ ЗНАНИЙ */
+        /* ПОТОК МАГИИ (Искры снизу вверх) */
         .sparkle {
             position: absolute;
-            width: 8px; height: 8px;
-            background: #fbbf24;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
             border-radius: 50%;
-            bottom: 180px;
-            right: 80px;
+            bottom: 0;
             opacity: 0;
-            z-index: 25;
-            animation: magic-rise 4s infinite;
-            filter: blur(1px) shadow(0 0 10px #fbbf24);
+            z-index: 5;
+            animation: rise-up 3s infinite linear;
+            filter: blur(0.5px);
         }
 
-        /* АНИМАЦИИ */
-        @keyframes head-tilt {
-            0%, 70%, 100% { transform: rotate(0); }
-            75%, 90% { transform: rotate(8deg); }
-        }
-
-        @keyframes scratch-action {
-            0%, 70%, 100% { opacity: 0; transform: rotate(0); }
-            72% { opacity: 1; }
-            75%, 85%, 95% { transform: translate(-15px, -25px) rotate(-40deg); }
-            80%, 90% { transform: translate(-5px, -15px) rotate(-20deg); }
-        }
-
-        @keyframes magic-rise {
-            0%, 72% { opacity: 0; transform: scale(0); }
-            75% { opacity: 1; }
-            100% { transform: translateY(-160px) translateX(60px) scale(2); opacity: 0; }
+        @keyframes rise-up {
+            0% { 
+                transform: translateY(0) translateX(0) scale(0.5); 
+                opacity: 0; 
+            }
+            20% { opacity: 0.8; }
+            100% { 
+                transform: translateY(-300px) translateX(var(--x)) scale(1.5); 
+                opacity: 0; 
+            }
         }
 
         @keyframes hat-float {
             0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
         }
 
-        /* ТЕ САМЫЕ КНОПКИ (18px, мягкий шрифт, пружина) */
-        .cta-stack { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
-        
+        /* КНОПКИ (Восстановленный пружинистый стиль 18px) */
+        .cta-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 340px; /* Идеально для Samsung S10Fe */
+        }
+
         .btn {
-            width: 100%; padding: 20px; font-size: 1.1rem; font-weight: 600;
-            border-radius: 18px; border: none; cursor: pointer;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none; display: flex; justify-content: center;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: none; /* Возврат к обычному регистру */
         }
 
-        .btn-prep { background: var(--primary); color: white; box-shadow: 0 10px 20px -5px var(--primary-glow); }
-        .btn-prep:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 35px -10px var(--primary-glow); }
-        
-        .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
-        .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px); }
-        
-        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; }
-        .btn-reg:hover { color: var(--primary); text-decoration: underline; }
-        
-        .btn:active { transform: scale(0.94) !important; }
+        .btn-prep {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
 
-        @media (max-width: 480px) { h1 { letter-spacing: 0.08em; } .dog-bill { font-size: 130px; } }
+        .btn-prep:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 20px 35px -10px var(--primary-glow);
+        }
+
+        .btn-exam {
+            background: white;
+            color: var(--text-main);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-exam:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .btn-reg {
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .btn-reg:hover { 
+            color: var(--primary); 
+            text-decoration: underline; 
+        }
+
+        .btn:active { 
+            transform: scale(0.94) !important; 
+        }
+
+        /* Адаптив для Samsung S10Fe */
+        @media (max-width: 480px) {
+            h1 { letter-spacing: 0.08em; }
+            .hat { font-size: 80px; }
+            .scene { height: 260px; }
+        }
     </style>
 </head>
 <body>
@@ -146,15 +188,13 @@
         <div class="scene">
             <div class="hat">🎓</div>
             
-            <!-- Магия (вылетает в момент чесания) -->
-            <div class="sparkle" style="animation-delay: 0s"></div>
-            <div class="sparkle" style="animation-delay: 0.2s"></div>
-
-            <!-- Персонаж Билл (используем эмодзи Собаки) -->
-            <div class="dog-bill">🐕</div>
-            
-            <!-- Лапа (отдельный эмодзи для анимации чесания) -->
-            <div class="scratch-paw">🐾</div>
+            <!-- Магические частицы, поднимающиеся снизу -->
+            <div class="sparkle" style="--x: -60px; left: 40%; animation-delay: 0s;"></div>
+            <div class="sparkle" style="--x: 50px; left: 50%; animation-delay: 0.4s;"></div>
+            <div class="sparkle" style="--x: -20px; left: 60%; animation-delay: 0.8s;"></div>
+            <div class="sparkle" style="--x: 80px; left: 45%; animation-delay: 1.2s;"></div>
+            <div class="sparkle" style="--x: -40px; left: 55%; animation-delay: 1.6s;"></div>
+            <div class="sparkle" style="--x: 20px; left: 50%; animation-delay: 2s;"></div>
         </div>
 
         <div class="cta-stack">

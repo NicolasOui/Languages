@@ -54,19 +54,19 @@
             letter-spacing: 0.05em;
         }
 
-        /* КОМПОЗИЦИЯ С ДЕТАЛЬНОЙ КНИГОЙ */
+        /* ГЛАВНАЯ СЦЕНА */
         .scene {
             width: 320px;
-            height: 320px;
+            height: 340px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        /* Академическая шапочка */
+        /* Шапочка */
         .hat {
             font-size: 65px;
             position: absolute;
@@ -76,62 +76,60 @@
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
         }
 
-        /* ДЕТАЛИЗИРОВАННАЯ КНИГА (SVG для четкости) */
-        .book-wrap {
-            width: 200px;
-            margin-top: 80px;
-            filter: drop-shadow(0 20px 30px rgba(37, 99, 235, 0.15));
-            animation: book-hover 3s infinite ease-in-out;
-        }
-
-        .book-svg {
-            width: 100%;
-            height: auto;
-            fill: white;
-            stroke: var(--primary);
-            stroke-width: 1.5;
-            stroke-linejoin: round;
-        }
-
-        .page-flip {
-            transform-origin: center;
-            animation: flip-anim 2s infinite ease-in-out;
-            fill: #f8fafc;
-        }
-
-        /* ЧАСТИЦЫ ЗНАНИЙ */
+        /* МАГИЯ (Частицы из центра книги) */
         .sparkle {
             position: absolute;
             width: 6px; height: 6px;
             background: var(--accent);
             border-radius: 50%;
-            bottom: 120px;
+            /* Точка старта - центр книги */
+            bottom: 110px; 
             opacity: 0;
-            animation: sparks 2.5s infinite linear;
+            z-index: 5;
+            animation: sparks-fly 2.5s infinite linear;
         }
 
-        @keyframes flip-anim {
-            0%, 100% { transform: rotateY(0deg) scaleX(1); }
-            50% { transform: rotateY(40deg) scaleX(0.8); fill: #eff6ff; }
+        @keyframes sparks-fly {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-160px) translateX(var(--x)) rotate(360deg) scale(1.5); opacity: 0; }
+        }
+
+        /* ДЕТАЛЬНАЯ КНИГА */
+        .book-wrap {
+            width: 220px;
+            margin-top: 120px;
+            filter: drop-shadow(0 25px 35px rgba(37, 99, 235, 0.15));
+            animation: book-hover 3s infinite ease-in-out;
+            z-index: 2;
+        }
+
+        .book-svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .page-flipping {
+            transform-origin: center;
+            animation: flip-page 2.5s infinite ease-in-out;
+        }
+
+        @keyframes flip-page {
+            0%, 100% { transform: rotateY(0deg) skewY(0deg); fill: #fff; }
+            50% { transform: rotateY(30deg) skewY(-5deg); fill: #eff6ff; }
         }
 
         @keyframes book-hover {
-            0%, 100% { transform: translateY(0) rotateX(10deg); }
-            50% { transform: translateY(15px) rotateX(0deg); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(10px) scale(1.02); }
         }
 
         @keyframes hat-float {
             0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-35px) rotate(5deg) scale(1.1); }
+            50% { transform: translateY(-30px) rotate(5deg) scale(1.1); }
         }
 
-        @keyframes sparks {
-            0% { transform: translateY(0) scale(0); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-180px) translateX(var(--x)) rotate(360deg); opacity: 0; }
-        }
-
-        /* ВАШИ ЛЮБИМЫЕ КНОПКИ */
+        /* КНОПКИ (Ваш стиль) */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -174,7 +172,6 @@
 
         .btn-exam:hover {
             border-color: var(--primary);
-            color: var(--primary);
             background: #f0f7ff;
             transform: translateY(-3px) scale(1.01);
         }
@@ -191,7 +188,6 @@
 
         @media (max-width: 480px) {
             h1 { letter-spacing: 0.08em; }
-            .scene { height: 280px; }
         }
     </style>
 </head>
@@ -204,31 +200,30 @@
         <div class="scene">
             <div class="hat">🎓</div>
             
-            <!-- Магические искры -->
-            <div class="sparkle" style="--x: -60px; animation-delay: 0s;"></div>
-            <div class="sparkle" style="--x: 50px; animation-delay: 0.6s;"></div>
-            <div class="sparkle" style="--x: -20px; animation-delay: 1.2s;"></div>
-            <div class="sparkle" style="--x: 70px; animation-delay: 1.8s;"></div>
+            <!-- Магические частицы, вылетающие ИЗ книги -->
+            <div class="sparkle" style="--x: -40px; animation-delay: 0s;"></div>
+            <div class="sparkle" style="--x: 30px; animation-delay: 0.5s;"></div>
+            <div class="sparkle" style="--x: -10px; animation-delay: 1s;"></div>
+            <div class="sparkle" style="--x: 50px; animation-delay: 1.5s;"></div>
 
-            <!-- Детализированная SVG Книга -->
+            <!-- Детальная книга -->
             <div class="book-wrap">
-                <svg class="book-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org">
-                    <!-- Обложка (переплет) -->
-                    <path d="M10 70 L55 78 L60 78 L105 70 L110 20 L60 28 L10 20 Z" fill="#1e40af" stroke="none"/>
-                    <!-- Стопка страниц слева -->
-                    <path d="M15 22 L58 30 L58 75 L15 67 Z" fill="#e2e8f0"/>
-                    <!-- Стопка страниц справа -->
-                    <path d="M62 30 L105 22 L105 67 L62 75 Z" fill="#e2e8f0"/>
-                    <!-- Основные открытые страницы -->
-                    <path d="M15 20 L58 28 L58 73 L15 65 Z" fill="white"/>
-                    <path d="M62 28 L105 20 L105 65 L62 73 Z" fill="white"/>
-                    <!-- Анимированная перелистывающаяся страница -->
-                    <path class="page-flip" d="M60 28 L95 22 L95 67 L60 73 Z" stroke-dasharray="2 1"/>
-                    <!-- Линии текста (детализация) -->
-                    <line x1="22" y1="35" x2="50" y2="40" stroke="#cbd5e1" stroke-width="1"/>
-                    <line x1="22" y1="45" x2="50" y2="50" stroke="#cbd5e1" stroke-width="1"/>
-                    <line x1="70" y1="40" x2="98" y2="35" stroke="#cbd5e1" stroke-width="1"/>
-                    <line x1="70" y1="50" x2="98" y2="45" stroke="#cbd5e1" stroke-width="1"/>
+                <svg class="book-svg" viewBox="0 0 120 90" xmlns="http://www.w3.org">
+                    <!-- Темная обложка -->
+                    <path d="M10 75 L55 83 L60 83 L105 75 L110 25 L60 33 L10 25 Z" fill="#1e3a8a"/>
+                    <!-- Объемный блок страниц -->
+                    <path d="M15 27 L58 35 L58 80 L15 72 Z" fill="#cbd5e1"/>
+                    <path d="M62 35 L105 27 L105 72 L62 80 Z" fill="#cbd5e1"/>
+                    <!-- Чистые открытые страницы -->
+                    <path d="M15 25 L58 33 L58 78 L15 70 Z" fill="#fff"/>
+                    <path d="M62 33 L105 25 L105 70 L62 78 Z" fill="#fff"/>
+                    <!-- Линии текста для детализации -->
+                    <rect x="22" y="40" width="28" height="2" fill="#e2e8f0" rx="1"/>
+                    <rect x="22" y="48" width="28" height="2" fill="#e2e8f0" rx="1"/>
+                    <rect x="70" y="40" width="28" height="2" fill="#e2e8f0" rx="1"/>
+                    <rect x="70" y="48" width="28" height="2" fill="#e2e8f0" rx="1"/>
+                    <!-- Анимированный лист в центре -->
+                    <path class="page-flipping" d="M60 33 L95 25 L95 70 L60 78 Z" fill="#fff" stroke="#e2e8f0" stroke-width="0.5"/>
                 </svg>
             </div>
         </div>

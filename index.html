@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 - Подготовка к экзамену</title>
-    <!-- Шрифты и Lottie-плеер -->
+    <title>DELF A1 - Preparation</title>
+    
+    <!-- Подключение шрифта Inter и стабильной библиотеки Lottie -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <script src="https://unpkg.com" type="module"></script>
+    <script src="https://unpkg.com"></script>
     
     <style>
         :root {
@@ -33,7 +34,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .container {
@@ -47,110 +47,104 @@
         }
 
         h1 {
-            font-size: clamp(3.5rem, 12vw, 6rem); /* Адаптивный размер для Samsung и Desktop */
+            font-size: clamp(3.2rem, 10vw, 5.5rem);
             font-weight: 800;
             margin: 0;
-            line-height: 1;
             letter-spacing: -0.04em;
-            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary) 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            font-size: clamp(1rem, 4vw, 1.4rem);
             color: var(--text-light);
-            margin-top: 15px;
-            margin-bottom: 30px;
-            font-weight: 400;
+            margin: 10px 0 30px 0;
         }
 
-        /* Контейнер для анимации */
+        /* Контейнер анимации */
         .animation-wrapper {
             width: 100%;
-            max-width: 500px;
-            height: 300px;
+            max-width: 450px;
+            height: 320px;
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.05));
         }
 
-        /* Группа кнопок с интерактивом */
+        /* Группа кнопок */
         .cta-stack {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
             width: 100%;
-            max-width: 340px; /* Идеально для S10Fe */
+            max-width: 340px; /* Оптимально для Samsung S10Fe (360px) */
         }
 
-        button {
+        button, .btn-reg {
             width: 100%;
-            padding: 20px 32px;
-            font-size: 1.1rem;
+            padding: 18px 24px;
+            font-size: 1rem;
             font-weight: 600;
-            border-radius: 16px;
+            border-radius: 14px;
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Кнопка: Пройти подготовку */
-        .btn-main {
+        /* Интерактив: Пройти подготовку */
+        .btn-prep {
             background: var(--primary);
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 10px 15px -3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-main:hover {
+        .btn-prep:hover {
             transform: translateY(-3px) scale(1.02);
             background: var(--primary-hover);
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 12px 20px rgba(37, 99, 235, 0.3);
         }
 
-        /* Кнопка: Пройти экзамен */
-        .btn-outline {
+        /* Интерактив: Пройти экзамен */
+        .btn-exam {
             background: white;
             color: var(--text-dark);
             border: 2px solid #e2e8f0;
         }
 
-        .btn-outline:hover {
+        .btn-exam:hover {
             border-color: var(--primary);
             color: var(--primary);
-            background: #eff6ff;
+            background: #f0f7ff;
             transform: translateY(-2px);
         }
 
-        /* Ссылка: Зарегистрироваться */
-        .btn-link {
+        /* Интерактив: Зарегистрироваться */
+        .btn-reg {
             background: transparent;
             color: var(--text-light);
-            font-size: 1rem;
-            text-decoration: none;
-            margin-top: 10px;
-            padding: 10px;
-            display: inline-block;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
 
-        .btn-link:hover {
+        .btn-reg:hover {
             color: var(--primary);
-            transform: scale(1.05);
+            text-decoration: underline;
         }
 
-        /* Эффект активного нажатия (фидбек) */
+        /* Эффект при нажатии на мобильных */
         button:active {
-            transform: scale(0.96) !important;
+            transform: scale(0.97);
         }
 
-        /* Адаптация под мобильные (Samsung S10Fe / S21 / iPhone) */
         @media (max-width: 480px) {
-            .container { padding: 20px 16px; }
-            .animation-wrapper { height: 220px; }
+            .container { padding: 20px 15px; }
+            .animation-wrapper { height: 240px; }
             h1 { letter-spacing: -0.02em; }
         }
     </style>
@@ -161,24 +155,33 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
+        <!-- Анимация с человечками -->
         <div class="animation-wrapper">
-            <!-- Профессиональная анимация успеха: два человечка радуются -->
-            <dotlottie-player 
+            <lottie-player 
                 src="https://lottie.host" 
                 background="transparent" 
-                speed="1.2" 
+                speed="1" 
                 style="width: 100%; height: 100%;" 
                 loop 
                 autoplay>
-            </dotlottie-player>
+            </lottie-player>
         </div>
 
         <div class="cta-stack">
-            <button class="btn-main" onclick="console.log('Подготовка')">Пройти подготовку</button>
-            <button class="btn-outline" onclick="console.log('Экзамен')">Пройти экзамен</button>
-            <a href="#" class="btn-link">Зарегистрироваться</a>
+            <button class="btn-prep">Пройти подготовку</button>
+            <button class="btn-exam">Пройти экзамен</button>
+            <a href="#" class="btn-reg">Зарегистрироваться</a>
         </div>
     </div>
+
+    <script>
+        // Простой лог для проверки работы кнопок
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('Нажата кнопка: ' + btn.innerText);
+            });
+        });
+    </script>
 
 </body>
 </html>

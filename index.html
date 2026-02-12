@@ -7,8 +7,8 @@
     <style>
         :root {
             --primary: #2563eb;
-            --primary-glow: rgba(37, 99, 235, 0.4);
-            --text-main: #1e293b;
+            --accent: #60a5fa;
+            --text-main: #0f172a;
             --text-sub: #64748b;
             --bg: #f8fafc;
         }
@@ -39,64 +39,92 @@
             font-size: clamp(3.5rem, 12vw, 6rem);
             font-weight: 800;
             margin: 0;
-            /* ИСПРАВЛЕНО: Увеличили межсимвольное расстояние */
-            letter-spacing: 0.05em; 
+            letter-spacing: 0.12em; /* Увеличенный элитный интервал */
             text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.05));
         }
 
         .subtitle {
             font-size: clamp(1rem, 4vw, 1.3rem);
             color: var(--text-sub);
-            margin: 15px 0 30px 0;
-            letter-spacing: 0.02em;
+            margin: 10px 0 40px 0;
+            letter-spacing: 0.05em;
+            font-weight: 500;
         }
 
-        /* АНИМАЦИЯ: УМНАЯ КНИГА */
-        .animation-box {
-            width: 240px;
-            height: 180px;
-            margin-bottom: 35px;
+        /* КОМПОЗИЦИЯ АНИМАЦИИ */
+        .scene {
+            width: 300px;
+            height: 220px;
+            perspective: 1000px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-container {
             position: relative;
+            width: 120px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 4px 15px 15px 4px;
+            transform: rotateX(45deg);
+            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.3);
+            animation: book-float 3s infinite ease-in-out;
         }
 
-        .book-svg {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: var(--primary);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        /* Страницы книги */
+        .book-container::before {
+            content: '';
+            position: absolute;
+            top: -10px; left: 5px;
+            width: 110px; height: 40px;
+            background: white;
+            border-radius: 2px 10px 10px 2px;
+            box-shadow: inset -5px 0 10px #e2e8f0;
+            animation: pages-flip 3s infinite ease-in-out;
         }
 
-        /* Анимация перелистывания страниц */
-        .page {
-            animation: flip 1.5s infinite ease-in-out;
-            transform-origin: center;
+        /* Вылетающая шапочка выпускника (символ DELF) */
+        .hat {
+            position: absolute;
+            top: -60px;
+            font-size: 50px;
+            animation: hat-jump 3s infinite ease-in-out;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
         }
 
-        @keyframes flip {
-            0%, 100% { transform: rotateY(0deg) skewY(0deg); }
-            50% { transform: rotateY(-20deg) skewY(-5deg); stroke: #94a3b8; }
+        /* Магические частицы знаний */
+        .particle {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: particle-fly 2s infinite linear;
         }
 
-        /* Летающие символы (знания) */
-        .sparkle {
-            fill: var(--primary);
-            animation: float-up 2s infinite ease-out;
-            opacity: 0;
+        @keyframes book-float {
+            0%, 100% { transform: rotateX(45deg) translateY(0); }
+            50% { transform: rotateX(55deg) translateY(-15px); }
         }
 
-        @keyframes float-up {
-            0% { transform: translateY(0) scale(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-60px) translateX(20px) scale(1.2); opacity: 0; }
+        @keyframes hat-jump {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-40px) rotate(10deg) scale(1.1); }
         }
 
-        /* КНОПКИ (Ваш прыгучий стиль) */
+        @keyframes particle-fly {
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+        }
+
+        /* КНОПКИ ПРЫГУЧИЕ */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -109,25 +137,27 @@
             width: 100%;
             padding: 20px;
             font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 18px;
+            font-weight: 700;
+            border-radius: 20px;
             border: none;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: flex;
             justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .btn-prep {
             background: var(--primary);
             color: white;
-            box-shadow: 0 10px 20px -5px var(--primary-glow);
+            box-shadow: 0 10px 25px -5px var(--primary-glow);
         }
 
         .btn-prep:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 20px 35px -10px var(--primary-glow);
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: 0 25px 40px -10px var(--primary-glow);
         }
 
         .btn-exam {
@@ -139,7 +169,7 @@
         .btn-exam:hover {
             border-color: var(--primary);
             background: #f0f7ff;
-            transform: translateY(-3px) scale(1.01);
+            transform: translateY(-4px) scale(1.02);
         }
 
         .btn-reg {
@@ -147,9 +177,16 @@
             color: var(--text-sub);
             font-size: 0.95rem;
             margin-top: 10px;
+            transition: 0.3s;
         }
 
-        .btn:active { transform: scale(0.94) !important; }
+        .btn-reg:hover { color: var(--primary); text-decoration: underline; }
+        .btn:active { transform: scale(0.92) !important; }
+
+        @media (max-width: 480px) {
+            h1 { letter-spacing: 0.08em; }
+            .scene { height: 180px; }
+        }
     </style>
 </head>
 <body>
@@ -158,22 +195,15 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
-        <!-- Анимация книги -->
-        <div class="animation-box">
-            <svg class="book-svg" viewBox="0 0 100 80">
-                <!-- Обложка -->
-                <path d="M10 70 Q50 80 90 70 V20 Q50 30 10 20 Z" />
-                <!-- Корешок -->
-                <line x1="50" y1="25" x2="50" y2="75" />
-                <!-- Страницы -->
-                <path class="page" d="M50 25 Q70 20 85 25 V65 Q70 60 50 65" />
-                <path class="page" d="M50 25 Q30 20 15 25 V65 Q30 60 50 65" style="animation-delay: 0.7s;" />
-                
-                <!-- Летающие частицы (знания) -->
-                <circle class="sparkle" cx="50" cy="20" r="2" style="animation-delay: 0.1s;" />
-                <circle class="sparkle" cx="60" cy="15" r="1.5" style="animation-delay: 0.5s;" />
-                <circle class="sparkle" cx="40" cy="10" r="2.5" style="animation-delay: 0.9s;" />
-            </svg>
+        <!-- Профессиональная CSS анимация -->
+        <div class="scene">
+            <div class="hat">🎓</div>
+            <div class="book-container"></div>
+            <!-- Частицы знаний -->
+            <div class="particle" style="--dx: -80px; --dy: -100px; animation-delay: 0.1s;"></div>
+            <div class="particle" style="--dx: 80px; --dy: -120px; animation-delay: 0.5s;"></div>
+            <div class="particle" style="--dx: 40px; --dy: -150px; animation-delay: 0.8s;"></div>
+            <div class="particle" style="--dx: -50px; --dy: -140px; animation-delay: 1.2s;"></div>
         </div>
 
         <div class="cta-stack">

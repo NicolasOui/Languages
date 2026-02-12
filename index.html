@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 - Preparation</title>
-    
+    <title>DELF A1 - Success</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -18,16 +17,13 @@
 
         body {
             margin: 0;
-            padding: 0;
-            /* Используем системные шрифты, чтобы избежать ошибки 404 с Google Fonts */
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .container {
@@ -53,26 +49,30 @@
         .subtitle {
             font-size: clamp(1rem, 4vw, 1.4rem);
             color: var(--text-sub);
-            margin: 10px 0 25px 0;
+            margin: 10px 0 30px 0;
         }
 
-        /* Контейнер для анимации - теперь используем надежный GIF */
+        /* АНИМИРОВАННЫЙ SVG (Человечки) */
         .animation-box {
-            width: 100%;
-            max-width: 400px;
-            height: 300px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .animation-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 20px;
+            width: 200px;
+            height: 150px;
+            margin-bottom: 30px;
         }
 
+        .stickman {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 3;
+            stroke-linecap: round;
+            animation: jump 0.6s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        @keyframes jump {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        /* КНОПКИ С ВАШЕЙ ЛЮБИМОЙ АНИМАЦИЕЙ */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -89,7 +89,6 @@
             border-radius: 18px;
             border: none;
             cursor: pointer;
-            /* ВОЗВРАЩЕНА ПРЫГУЧАЯ АНИМАЦИЯ */
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: flex;
@@ -116,7 +115,6 @@
 
         .btn-exam:hover {
             border-color: var(--primary);
-            color: var(--primary);
             background: #f0f7ff;
             transform: translateY(-3px) scale(1.01);
         }
@@ -125,19 +123,12 @@
             background: transparent;
             color: var(--text-sub);
             font-size: 0.95rem;
-            font-weight: 500;
             margin-top: 10px;
-            transition: 0.3s;
         }
 
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
         .btn:active { transform: scale(0.94) !important; }
-
-        @media (max-width: 480px) {
-            .animation-box { height: 240px; }
-            h1 { letter-spacing: -0.02em; }
-        }
     </style>
 </head>
 <body>
@@ -146,9 +137,20 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
+        <!-- Гарантированная анимация (встроена в код) -->
         <div class="animation-box">
-            <!-- Используем профессиональный GIF вместо капризного Lottie, чтобы точно избежать 404 -->
-            <img src="https://i.giphy.com" alt="Success">
+            <svg viewBox="0 0 200 100" xmlns="http://www.w3.org">
+                <!-- Первый человечек -->
+                <g class="stickman">
+                    <circle cx="60" cy="30" r="10"/>
+                    <path d="M60 40 V70 M40 50 L60 60 L80 50 M40 90 L60 70 L80 90"/>
+                </g>
+                <!-- Второй человечек (с задержкой) -->
+                <g class="stickman" style="animation-delay: 0.2s; stroke: #94a3b8;">
+                    <circle cx="140" cy="30" r="10"/>
+                    <path d="M140 40 V70 M120 50 L140 60 L160 50 M120 90 L140 70 L160 90"/>
+                </g>
+            </svg>
         </div>
 
         <div class="cta-stack">

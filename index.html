@@ -17,32 +17,23 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
         }
 
         .container {
-            width: 100%;
-            max-width: 1280px; /* Контентная область по ТЗ */
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+            width: 100%; max-width: 1280px; padding: 40px 20px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
         }
 
+        /* ЗАГОЛОВОК */
         h1 {
             font-size: clamp(3.5rem, 12vw, 6rem);
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 0.12em; /* Ваш элитный интервал */
+            font-weight: 800; margin: 0;
+            letter-spacing: 0.12em; 
             text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
             -webkit-background-clip: text;
@@ -56,49 +47,31 @@
             letter-spacing: 0.05em;
         }
 
-        /* ЦЕНТРАЛЬНАЯ АНИМАЦИЯ */
+        /* АНИМАЦИЯ ЦЕНТР */
         .scene {
-            width: 300px;
-            height: 300px;
+            width: 300px; height: 300px;
             position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             margin-bottom: 40px;
         }
 
         .hat {
-            font-size: 100px; /* Увеличенный размер для фокуса */
-            z-index: 10;
+            font-size: 100px; z-index: 10;
             filter: drop-shadow(0 20px 20px rgba(0,0,0,0.15));
             animation: hat-float 4s infinite ease-in-out;
-            user-select: none;
         }
 
-        /* ПОТОК МАГИИ (Искры снизу вверх) */
         .sparkle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            bottom: 0;
-            opacity: 0;
-            z-index: 5;
+            position: absolute; width: 6px; height: 6px;
+            background: var(--accent); border-radius: 50%;
+            bottom: 0; opacity: 0; z-index: 5;
             animation: rise-up 3s infinite linear;
-            filter: blur(0.5px);
         }
 
         @keyframes rise-up {
-            0% { 
-                transform: translateY(0) translateX(0) scale(0.5); 
-                opacity: 0; 
-            }
+            0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
             20% { opacity: 0.8; }
-            100% { 
-                transform: translateY(-300px) translateX(var(--x)) scale(1.5); 
-                opacity: 0; 
-            }
+            100% { transform: translateY(-320px) translateX(var(--x)) scale(1.5); opacity: 0; }
         }
 
         @keyframes hat-float {
@@ -106,76 +79,75 @@
             50% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
         }
 
-        /* КНОПКИ (Восстановленный пружинистый стиль 18px) */
-        .cta-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            width: 100%;
-            max-width: 340px; /* Идеально для Samsung S10Fe */
-        }
+        /* КНОПКИ */
+        .cta-stack { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
 
         .btn {
-            width: 100%;
-            padding: 20px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 18px;
-            border: none;
-            cursor: pointer;
+            width: 100%; padding: 20px; font-size: 1.1rem; font-weight: 600;
+            border-radius: 18px; border: none; cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; justify-content: center; align-items: center;
             text-decoration: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-transform: none; /* Возврат к обычному регистру */
         }
 
-        .btn-prep {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        .btn-prep { background: var(--primary); color: white; box-shadow: 0 10px 20px -5px var(--primary-glow); }
+        .btn-prep:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 35px -10px var(--primary-glow); }
+
+        .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
+        .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px); }
+
+        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; }
+        .btn-reg:hover { color: var(--primary); text-decoration: underline; }
+
+        .btn:active { transform: scale(0.94) !important; }
+
+        /* МОДАЛЬНОЕ ОКНО (ФОРМА) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-prep:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 20px 35px -10px var(--primary-glow);
+        .modal-content {
+            background: white; padding: 40px; border-radius: 24px;
+            width: 90%; max-width: 400px; position: relative;
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
-        .btn-exam {
-            background: white;
-            color: var(--text-main);
-            border: 2px solid #e2e8f0;
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+
+        .modal-content h2 { font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.02em; font-size: 1.8rem; }
+        .modal-content p { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
+
+        .input-group { margin-bottom: 16px; text-align: left; }
+        .input-group input {
+            width: 100%; padding: 16px; border-radius: 12px;
+            border: 2px solid #f1f5f9; background: #f8fafc;
+            font-size: 1rem; transition: all 0.3s ease;
         }
 
-        .btn-exam:hover {
-            border-color: var(--primary);
-            background: #f0f7ff;
-            transform: translateY(-3px) scale(1.01);
+        .input-group input:focus {
+            outline: none; border-color: var(--primary);
+            background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
 
-        .btn-reg {
-            background: transparent;
-            color: var(--text-sub);
-            font-size: 0.95rem;
-            margin-top: 10px;
-            font-weight: 500;
+        .close-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none; font-size: 24px;
+            color: var(--text-sub); cursor: pointer;
         }
 
-        .btn-reg:hover { 
-            color: var(--primary); 
-            text-decoration: underline; 
-        }
-
-        .btn:active { 
-            transform: scale(0.94) !important; 
-        }
-
-        /* Адаптив для Samsung S10Fe */
         @media (max-width: 480px) {
             h1 { letter-spacing: 0.08em; }
             .hat { font-size: 80px; }
-            .scene { height: 260px; }
+            .modal-content { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -187,22 +159,56 @@
 
         <div class="scene">
             <div class="hat">🎓</div>
-            
-            <!-- Магические частицы, поднимающиеся снизу -->
+            <!-- Магия -->
             <div class="sparkle" style="--x: -60px; left: 40%; animation-delay: 0s;"></div>
             <div class="sparkle" style="--x: 50px; left: 50%; animation-delay: 0.4s;"></div>
             <div class="sparkle" style="--x: -20px; left: 60%; animation-delay: 0.8s;"></div>
             <div class="sparkle" style="--x: 80px; left: 45%; animation-delay: 1.2s;"></div>
             <div class="sparkle" style="--x: -40px; left: 55%; animation-delay: 1.6s;"></div>
-            <div class="sparkle" style="--x: 20px; left: 50%; animation-delay: 2s;"></div>
         </div>
 
         <div class="cta-stack">
             <button class="btn btn-prep">Пройти подготовку</button>
             <button class="btn btn-exam">Пройти экзамен</button>
-            <a href="#" class="btn btn-reg">Зарегистрироваться</a>
+            <a href="javascript:void(0)" class="btn btn-reg" onclick="toggleModal()">Зарегистрироваться</a>
         </div>
     </div>
 
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modalReg">
+        <div class="modal-content">
+            <button class="close-btn" onclick="toggleModal()">&times;</button>
+            <h2>Регистрация</h2>
+            <p>Создайте аккаунт для сохранения прогресса</p>
+            
+            <form onsubmit="handleReg(event)">
+                <div class="input-group">
+                    <input type="text" id="login" placeholder="Логин" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="btn btn-prep">Создать аккаунт</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            document.getElementById('modalReg').classList.toggle('active');
+        }
+
+        function handleReg(e) {
+            e.preventDefault();
+            const login = document.getElementById('login').value;
+            alert('Добро пожаловать, ' + login + '! Теперь вы можете начать подготовку.');
+            toggleModal();
+        }
+
+        // Закрытие по клику на фон
+        document.getElementById('modalReg').addEventListener('click', function(e) {
+            if (e.target === this) toggleModal();
+        });
+    </script>
 </body>
 </html>

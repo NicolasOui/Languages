@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELF A1 Preparation</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg: #f9fafb;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px; /* Десктопная область по ТЗ */
+            padding: 0 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 5rem); /* Адаптивный размер */
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        /* Заглушка для анимации */
+        .animation-box {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin-bottom: 40px;
+            background: #e2e8f0;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Простая CSS-анимация (радость) */
+        .stickman { font-size: 50px; animation: jump 0.5s infinite alternate; }
+        @keyframes jump { from { transform: translateY(0); } to { transform: translateY(-20px); } }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 320px; /* Удобно для мобильных и Samsung S10Fe */
+        }
+
+        button {
+            padding: 18px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-prep { background: var(--primary); color: white; }
+        .btn-prep:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+
+        .btn-exam { background: white; border: 2px solid #e2e8f0; color: var(--text-dark); }
+        .btn-exam:hover { border-color: var(--primary); color: var(--primary); }
+
+        .btn-reg {
+            background: transparent;
+            color: var(--text-light);
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+
+        /* Адаптив для Samsung S10Fe (360px+) */
+        @media (max-width: 480px) {
+            .container { padding: 40px 15px; }
+            .animation-box { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>DELF A1</h1>
+        <p class="subtitle">Tests pour se préparer à l'examen</p>
+
+        <div class="animation-box">
+            <!-- Здесь будет ваш Lottie или GIF -->
+            <div class="stickman">🙌🥳</div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-prep">Пройти подготовку</button>
+            <button class="btn-exam">Пройти экзамен</button>
+            <button class="btn-reg">Зарегистрироваться</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -54,111 +54,84 @@
             letter-spacing: 0.05em;
         }
 
-        /* КОМПОЗИЦИЯ: ДЕТАЛИЗИРОВАННАЯ 3D КНИГА + ШАПКА */
+        /* КОМПОЗИЦИЯ С ДЕТАЛЬНОЙ КНИГОЙ */
         .scene {
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
             position: relative;
-            margin-bottom: 40px;
-            perspective: 1000px;
+            margin-bottom: 30px;
         }
 
+        /* Академическая шапочка */
         .hat {
             font-size: 65px;
             position: absolute;
-            top: 20px;
-            animation: hat-float 3s infinite ease-in-out;
-            filter: drop-shadow(0 20px 25px rgba(0,0,0,0.15));
+            top: 10px;
             z-index: 10;
+            animation: hat-float 3s infinite ease-in-out;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
         }
 
-        /* 3D КНИГА С ПЕРЕЛИСТЫВАНИЕМ */
-        .book-3d {
-            width: 160px;
-            height: 20px;
-            background: #1e40af; /* Корешок */
-            position: relative;
-            transform: rotateX(30deg);
-            transform-style: preserve-3d;
-            border-radius: 2px 2px 8px 8px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        /* ДЕТАЛИЗИРОВАННАЯ КНИГА (SVG для четкости) */
+        .book-wrap {
+            width: 200px;
+            margin-top: 80px;
+            filter: drop-shadow(0 20px 30px rgba(37, 99, 235, 0.15));
+            animation: book-hover 3s infinite ease-in-out;
         }
 
-        .page-3d {
-            position: absolute;
-            bottom: 0;
-            width: 80px;
-            height: 110px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            transform-origin: bottom;
-            transition: 0.5s;
+        .book-svg {
+            width: 100%;
+            height: auto;
+            fill: white;
+            stroke: var(--primary);
+            stroke-width: 1.5;
+            stroke-linejoin: round;
         }
 
-        .page-left {
-            right: 50%;
-            border-radius: 10px 2px 2px 10px;
-            transform: rotateY(-110deg) rotateX(-10deg);
-            background: linear-gradient(to left, #ffffff, #f8fafc);
-            box-shadow: inset 5px 0 15px rgba(0,0,0,0.05);
+        .page-flip {
+            transform-origin: center;
+            animation: flip-anim 2s infinite ease-in-out;
+            fill: #f8fafc;
         }
 
-        .page-right {
-            left: 50%;
-            border-radius: 2px 10px 10px 2px;
-            transform: rotateY(110deg) rotateX(-10deg);
-            background: linear-gradient(to right, #ffffff, #f8fafc);
-            box-shadow: inset -5px 0 15px rgba(0,0,0,0.05);
-        }
-
-        /* Анимированная центральная страница (эффект чтения) */
-        .page-flipping {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            width: 75px;
-            height: 105px;
-            background: #fff;
-            border-radius: 2px 10px 10px 2px;
-            transform-origin: left;
-            animation: flip-page 3s infinite ease-in-out;
-            border: 1px solid #f1f5f9;
-            z-index: 5;
-        }
-
-        @keyframes flip-page {
-            0%, 100% { transform: rotateY(110deg); }
-            50% { transform: rotateY(20deg) scaleX(0.9); background: #f8fafc; }
-        }
-
-        /* ЧАСТИЦЫ */
-        .particle {
+        /* ЧАСТИЦЫ ЗНАНИЙ */
+        .sparkle {
             position: absolute;
             width: 6px; height: 6px;
             background: var(--accent);
             border-radius: 50%;
-            bottom: 100px;
+            bottom: 120px;
             opacity: 0;
-            animation: particle-rise 2.5s infinite ease-out;
-            z-index: 8;
+            animation: sparks 2.5s infinite linear;
         }
 
-        @keyframes particle-rise {
-            0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-180px) translateX(var(--dir)) scale(1.5); opacity: 0; }
+        @keyframes flip-anim {
+            0%, 100% { transform: rotateY(0deg) scaleX(1); }
+            50% { transform: rotateY(40deg) scaleX(0.8); fill: #eff6ff; }
+        }
+
+        @keyframes book-hover {
+            0%, 100% { transform: translateY(0) rotateX(10deg); }
+            50% { transform: translateY(15px) rotateX(0deg); }
         }
 
         @keyframes hat-float {
-            0%, 100% { transform: translateY(0) rotate(-3deg); }
-            50% { transform: translateY(-25px) rotate(5deg) scale(1.05); }
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-35px) rotate(5deg) scale(1.1); }
         }
 
-        /* КНОПКИ (Восстановленный стиль) */
+        @keyframes sparks {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-180px) translateX(var(--x)) rotate(360deg); opacity: 0; }
+        }
+
+        /* ВАШИ ЛЮБИМЫЕ КНОПКИ */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -210,8 +183,7 @@
             background: transparent;
             color: var(--text-sub);
             font-size: 0.95rem;
-            font-weight: 500;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
@@ -219,7 +191,7 @@
 
         @media (max-width: 480px) {
             h1 { letter-spacing: 0.08em; }
-            .scene { height: 260px; }
+            .scene { height: 280px; }
         }
     </style>
 </head>
@@ -233,16 +205,31 @@
             <div class="hat">🎓</div>
             
             <!-- Магические искры -->
-            <div class="particle" style="--dir: -50px; animation-delay: 0s;"></div>
-            <div class="particle" style="--dir: 40px; animation-delay: 0.5s;"></div>
-            <div class="particle" style="--dir: -15px; animation-delay: 1s;"></div>
-            <div class="particle" style="--dir: 60px; animation-delay: 1.5s;"></div>
+            <div class="sparkle" style="--x: -60px; animation-delay: 0s;"></div>
+            <div class="sparkle" style="--x: 50px; animation-delay: 0.6s;"></div>
+            <div class="sparkle" style="--x: -20px; animation-delay: 1.2s;"></div>
+            <div class="sparkle" style="--x: 70px; animation-delay: 1.8s;"></div>
 
-            <!-- Детализированная 3D книга -->
-            <div class="book-3d">
-                <div class="page-3d page-left"></div>
-                <div class="page-3d page-right"></div>
-                <div class="page-flipping"></div> <!-- Перелистывающаяся страница -->
+            <!-- Детализированная SVG Книга -->
+            <div class="book-wrap">
+                <svg class="book-svg" viewBox="0 0 120 80" xmlns="http://www.w3.org">
+                    <!-- Обложка (переплет) -->
+                    <path d="M10 70 L55 78 L60 78 L105 70 L110 20 L60 28 L10 20 Z" fill="#1e40af" stroke="none"/>
+                    <!-- Стопка страниц слева -->
+                    <path d="M15 22 L58 30 L58 75 L15 67 Z" fill="#e2e8f0"/>
+                    <!-- Стопка страниц справа -->
+                    <path d="M62 30 L105 22 L105 67 L62 75 Z" fill="#e2e8f0"/>
+                    <!-- Основные открытые страницы -->
+                    <path d="M15 20 L58 28 L58 73 L15 65 Z" fill="white"/>
+                    <path d="M62 28 L105 20 L105 65 L62 73 Z" fill="white"/>
+                    <!-- Анимированная перелистывающаяся страница -->
+                    <path class="page-flip" d="M60 28 L95 22 L95 67 L60 73 Z" stroke-dasharray="2 1"/>
+                    <!-- Линии текста (детализация) -->
+                    <line x1="22" y1="35" x2="50" y2="40" stroke="#cbd5e1" stroke-width="1"/>
+                    <line x1="22" y1="45" x2="50" y2="50" stroke="#cbd5e1" stroke-width="1"/>
+                    <line x1="70" y1="40" x2="98" y2="35" stroke="#cbd5e1" stroke-width="1"/>
+                    <line x1="70" y1="50" x2="98" y2="45" stroke="#cbd5e1" stroke-width="1"/>
+                </svg>
             </div>
         </div>
 

@@ -54,92 +54,111 @@
             letter-spacing: 0.05em;
         }
 
-        /* КОМПОЗИЦИЯ: КНИГА + ШАПКА + ЗНАНИЯ */
+        /* КОМПОЗИЦИЯ: ДЕТАЛИЗИРОВАННАЯ 3D КНИГА + ШАПКА */
         .scene {
             width: 300px;
-            height: 280px;
+            height: 300px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
             position: relative;
             margin-bottom: 40px;
+            perspective: 1000px;
         }
 
-        /* Парящая шапка */
         .hat {
-            font-size: 60px;
+            font-size: 65px;
             position: absolute;
-            top: 10px;
+            top: 20px;
             animation: hat-float 3s infinite ease-in-out;
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 20px 25px rgba(0,0,0,0.15));
+            z-index: 10;
+        }
+
+        /* 3D КНИГА С ПЕРЕЛИСТЫВАНИЕМ */
+        .book-3d {
+            width: 160px;
+            height: 20px;
+            background: #1e40af; /* Корешок */
+            position: relative;
+            transform: rotateX(30deg);
+            transform-style: preserve-3d;
+            border-radius: 2px 2px 8px 8px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .page-3d {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            height: 110px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transform-origin: bottom;
+            transition: 0.5s;
+        }
+
+        .page-left {
+            right: 50%;
+            border-radius: 10px 2px 2px 10px;
+            transform: rotateY(-110deg) rotateX(-10deg);
+            background: linear-gradient(to left, #ffffff, #f8fafc);
+            box-shadow: inset 5px 0 15px rgba(0,0,0,0.05);
+        }
+
+        .page-right {
+            left: 50%;
+            border-radius: 2px 10px 10px 2px;
+            transform: rotateY(110deg) rotateX(-10deg);
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+            box-shadow: inset -5px 0 15px rgba(0,0,0,0.05);
+        }
+
+        /* Анимированная центральная страница (эффект чтения) */
+        .page-flipping {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 75px;
+            height: 105px;
+            background: #fff;
+            border-radius: 2px 10px 10px 2px;
+            transform-origin: left;
+            animation: flip-page 3s infinite ease-in-out;
+            border: 1px solid #f1f5f9;
             z-index: 5;
         }
 
-        /* Детальная книга */
-        .book {
-            width: 140px;
-            height: 100px;
-            position: relative;
-            perspective: 1000px;
-            animation: book-sway 3s infinite ease-in-out;
-            transform-style: preserve-3d;
-            z-index: 2;
+        @keyframes flip-page {
+            0%, 100% { transform: rotateY(110deg); }
+            50% { transform: rotateY(20deg) scaleX(0.9); background: #f8fafc; }
         }
 
-        .book-leaf {
-            position: absolute;
-            width: 75px;
-            height: 95px;
-            background: white;
-            border: 2px solid var(--primary);
-            box-shadow: inset -10px 0 20px #f1f5f9;
-        }
-
-        .leaf-left {
-            left: 0;
-            transform: rotateY(-35deg);
-            border-radius: 12px 2px 2px 12px;
-            box-shadow: inset 10px 0 20px #f1f5f9;
-        }
-
-        .leaf-right {
-            right: 0;
-            transform: rotateY(35deg);
-            border-radius: 2px 12px 12px 2px;
-        }
-
-        /* ЧАСТИЦЫ ЗНАНИЙ (Magic Sparks) */
+        /* ЧАСТИЦЫ */
         .particle {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 6px; height: 6px;
             background: var(--accent);
             border-radius: 50%;
-            filter: blur(1px);
-            bottom: 60px;
+            bottom: 100px;
             opacity: 0;
-            animation: particle-rise 2s infinite ease-out;
-            z-index: 3;
+            animation: particle-rise 2.5s infinite ease-out;
+            z-index: 8;
         }
 
         @keyframes particle-rise {
             0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-160px) translateX(var(--dir)) scale(1.2); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-180px) translateX(var(--dir)) scale(1.5); opacity: 0; }
         }
 
         @keyframes hat-float {
-            0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-25px) rotate(5deg); }
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-25px) rotate(5deg) scale(1.05); }
         }
 
-        @keyframes book-sway {
-            0%, 100% { transform: translateY(0) rotateX(15deg); }
-            50% { transform: translateY(10px) rotateX(5deg); }
-        }
-
-        /* КНОПКИ ПРУЖИНЯЩИЕ */
+        /* КНОПКИ (Восстановленный стиль) */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -200,7 +219,7 @@
 
         @media (max-width: 480px) {
             h1 { letter-spacing: 0.08em; }
-            .scene { height: 240px; }
+            .scene { height: 260px; }
         }
     </style>
 </head>
@@ -213,16 +232,17 @@
         <div class="scene">
             <div class="hat">🎓</div>
             
-            <!-- Летающие частицы знаний -->
-            <div class="particle" style="--dir: -40px; animation-delay: 0s;"></div>
-            <div class="particle" style="--dir: 30px; animation-delay: 0.4s;"></div>
-            <div class="particle" style="--dir: -10px; animation-delay: 0.8s;"></div>
-            <div class="particle" style="--dir: 50px; animation-delay: 1.2s;"></div>
-            <div class="particle" style="--dir: -60px; animation-delay: 1.6s;"></div>
+            <!-- Магические искры -->
+            <div class="particle" style="--dir: -50px; animation-delay: 0s;"></div>
+            <div class="particle" style="--dir: 40px; animation-delay: 0.5s;"></div>
+            <div class="particle" style="--dir: -15px; animation-delay: 1s;"></div>
+            <div class="particle" style="--dir: 60px; animation-delay: 1.5s;"></div>
 
-            <div class="book">
-                <div class="book-leaf leaf-left"></div>
-                <div class="book-leaf leaf-right"></div>
+            <!-- Детализированная 3D книга -->
+            <div class="book-3d">
+                <div class="page-3d page-left"></div>
+                <div class="page-3d page-right"></div>
+                <div class="page-flipping"></div> <!-- Перелистывающаяся страница -->
             </div>
         </div>
 

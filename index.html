@@ -3,18 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 - Learning</title>
+    <title>DELF A1 - Preparation</title>
     
-    <!-- ИСПРАВЛЕНО: Полная корректная ссылка на шрифт Inter -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    
-    <!-- ИСПРАВЛЕНО: Стабильная версия плеера из официального CDN -->
-    <script src="https://unpkg.com"></script>
-
     <style>
         :root {
             --primary: #2563eb;
-            --primary-glow: rgba(37, 99, 235, 0.3);
+            --primary-glow: rgba(37, 99, 235, 0.4);
             --text-main: #0f172a;
             --text-sub: #64748b;
             --bg: #f8fafc;
@@ -25,13 +19,15 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
+            /* Используем системные шрифты, чтобы избежать ошибки 404 с Google Fonts */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
@@ -45,7 +41,7 @@
         }
 
         h1 {
-            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-size: clamp(3.5rem, 12vw, 6rem);
             font-weight: 800;
             margin: 0;
             letter-spacing: -0.04em;
@@ -57,39 +53,48 @@
         .subtitle {
             font-size: clamp(1rem, 4vw, 1.4rem);
             color: var(--text-sub);
-            margin: 10px 0 20px 0;
+            margin: 10px 0 25px 0;
         }
 
+        /* Контейнер для анимации - теперь используем надежный GIF */
         .animation-box {
             width: 100%;
             max-width: 400px;
             height: 300px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        
+        .animation-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
         }
 
         .cta-stack {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             width: 100%;
             max-width: 340px;
         }
 
         .btn {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 16px;
+            border-radius: 18px;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* ВОЗВРАЩЕНА ПРЫГУЧАЯ АНИМАЦИЯ */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .btn-prep {
@@ -99,8 +104,8 @@
         }
 
         .btn-prep:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 25px -5px var(--primary-glow);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 20px 35px -10px var(--primary-glow);
         }
 
         .btn-exam {
@@ -109,19 +114,29 @@
             border: 2px solid #e2e8f0;
         }
 
-        .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; }
+        .btn-exam:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #f0f7ff;
+            transform: translateY(-3px) scale(1.01);
+        }
 
         .btn-reg {
             background: transparent;
             color: var(--text-sub);
             font-size: 0.95rem;
-            margin-top: 5px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: 0.3s;
         }
 
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
+        .btn:active { transform: scale(0.94) !important; }
+
         @media (max-width: 480px) {
-            .animation-box { height: 220px; }
+            .animation-box { height: 240px; }
+            h1 { letter-spacing: -0.02em; }
         }
     </style>
 </head>
@@ -132,15 +147,8 @@
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
         <div class="animation-box">
-            <!-- ИСПРАВЛЕНО: Ссылка на гарантированно рабочую анимацию успеха -->
-            <lottie-player 
-                src="https://assets10.lottiefiles.com" 
-                background="transparent" 
-                speed="1" 
-                style="width: 100%; height: 100%;" 
-                loop 
-                autoplay>
-            </lottie-player>
+            <!-- Используем профессиональный GIF вместо капризного Lottie, чтобы точно избежать 404 -->
+            <img src="https://i.giphy.com" alt="Success">
         </div>
 
         <div class="cta-stack">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 - Apprentissage</title>
+    <title>DELF A1 - Apprentissage & Préparation</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -12,13 +12,14 @@
             --text-main: #0f172a;
             --text-sub: #64748b;
             --bg: #f8fafc;
+            --easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh; overflow-x: hidden;
@@ -29,11 +30,11 @@
             display: flex; flex-direction: column; align-items: center; text-align: center;
         }
 
-        /* ЗАГОЛОВОК */
+        /* ГЛАВНЫЙ ЗАГОЛОВОК */
         h1 {
             font-size: clamp(3.5rem, 12vw, 6rem);
             font-weight: 800; margin: 0;
-            letter-spacing: 0.12em; 
+            letter-spacing: 0.12em; /* Элитный интервал */
             text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
             -webkit-background-clip: text;
@@ -47,7 +48,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* АНИМАЦИЯ ЦЕНТР */
+        /* ЦЕНТРАЛЬНАЯ СЦЕНА */
         .scene {
             width: 300px; height: 300px;
             position: relative;
@@ -59,33 +60,36 @@
             font-size: 100px; z-index: 10;
             filter: drop-shadow(0 20px 20px rgba(0,0,0,0.15));
             animation: hat-float 4s infinite ease-in-out;
+            user-select: none;
         }
 
+        /* МАГИЧЕСКИЙ ПОТОК ЗНАНИЙ */
         .sparkle {
             position: absolute; width: 6px; height: 6px;
             background: var(--accent); border-radius: 50%;
             bottom: 0; opacity: 0; z-index: 5;
             animation: rise-up 3s infinite linear;
+            filter: blur(0.5px);
         }
 
         @keyframes rise-up {
             0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
             20% { opacity: 0.8; }
-            100% { transform: translateY(-320px) translateX(var(--x)) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-350px) translateX(var(--x)) scale(1.8); opacity: 0; }
         }
 
         @keyframes hat-float {
             0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-30px) rotate(5deg) scale(1.05); }
+            50% { transform: translateY(-35px) rotate(5deg) scale(1.05); }
         }
 
-        /* КНОПКИ */
+        /* КНОПКИ (Ваш прыгучий стиль) */
         .cta-stack { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
 
         .btn {
             width: 100%; padding: 20px; font-size: 1.1rem; font-weight: 600;
             border-radius: 18px; border: none; cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s var(--easing);
             display: flex; justify-content: center; align-items: center;
             text-decoration: none;
         }
@@ -94,43 +98,52 @@
         .btn-prep:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 20px 35px -10px var(--primary-glow); }
 
         .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
-        .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px); }
+        .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px) scale(1.01); }
 
         .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; }
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
         .btn:active { transform: scale(0.94) !important; }
 
-        /* МОДАЛЬНОЕ ОКНО (ФОРМА) */
+        /* МОДАЛЬНОЕ ОКНО РЕГИСТРАЦИИ */
         .modal-overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             display: flex; justify-content: center; align-items: center;
             z-index: 100; opacity: 0; visibility: hidden;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal-content {
-            background: white; padding: 40px; border-radius: 24px;
-            width: 90%; max-width: 400px; position: relative;
-            transform: translateY(40px) scale(0.95);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: white; padding: 40px; border-radius: 28px;
+            width: 92%; max-width: 420px; position: relative;
+            transform: translateY(60px) scale(0.9);
+            transition: all 0.5s var(--easing);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
         }
 
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 
-        .modal-content h2 { font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.02em; font-size: 1.8rem; }
-        .modal-content p { color: var(--text-sub); margin-bottom: 24px; font-size: 0.95rem; }
+        .modal-content h2 { 
+            font-weight: 800; margin: 0 0 12px 0; 
+            letter-spacing: 0.1em; /* Статусный интервал */
+            font-size: 1.7rem; text-transform: uppercase;
+            background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        .input-group { margin-bottom: 16px; text-align: left; }
+        .modal-content p { color: var(--text-sub); margin-bottom: 30px; font-size: 0.95rem; letter-spacing: 0.03em; }
+
+        .input-group { margin-bottom: 18px; text-align: left; }
         .input-group input {
-            width: 100%; padding: 16px; border-radius: 12px;
+            width: 100%; padding: 18px; border-radius: 14px;
             border: 2px solid #f1f5f9; background: #f8fafc;
             font-size: 1rem; transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .input-group input:focus {
@@ -139,15 +152,19 @@
         }
 
         .close-btn {
-            position: absolute; top: 20px; right: 20px;
-            background: none; border: none; font-size: 24px;
-            color: var(--text-sub); cursor: pointer;
+            position: absolute; top: 22px; right: 22px;
+            background: none; border: none; font-size: 28px;
+            color: var(--text-sub); cursor: pointer; transition: 0.3s;
         }
+        .close-btn:hover { color: var(--primary); transform: rotate(90deg); }
 
+        /* Адаптив для Samsung S10Fe и мобильных */
         @media (max-width: 480px) {
             h1 { letter-spacing: 0.08em; }
-            .hat { font-size: 80px; }
-            .modal-content { padding: 30px 20px; }
+            .hat { font-size: 85px; }
+            .scene { height: 260px; }
+            .modal-content { padding: 35px 25px; }
+            .modal-content h2 { font-size: 1.4rem; letter-spacing: 0.06em; }
         }
     </style>
 </head>
@@ -159,12 +176,13 @@
 
         <div class="scene">
             <div class="hat">🎓</div>
-            <!-- Магия -->
+            <!-- Магические частицы -->
             <div class="sparkle" style="--x: -60px; left: 40%; animation-delay: 0s;"></div>
             <div class="sparkle" style="--x: 50px; left: 50%; animation-delay: 0.4s;"></div>
             <div class="sparkle" style="--x: -20px; left: 60%; animation-delay: 0.8s;"></div>
             <div class="sparkle" style="--x: 80px; left: 45%; animation-delay: 1.2s;"></div>
             <div class="sparkle" style="--x: -40px; left: 55%; animation-delay: 1.6s;"></div>
+            <div class="sparkle" style="--x: 20px; left: 50%; animation-delay: 2s;"></div>
         </div>
 
         <div class="cta-stack">
@@ -174,40 +192,49 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
+    <!-- Модальное окно регистрации -->
     <div class="modal-overlay" id="modalReg">
         <div class="modal-content">
             <button class="close-btn" onclick="toggleModal()">&times;</button>
-            <h2>Регистрация</h2>
-            <p>Создайте аккаунт для сохранения прогресса</p>
+            <h2>Создать аккаунт</h2>
+            <p>Ваш персональный прогресс обучения</p>
             
             <form onsubmit="handleReg(event)">
                 <div class="input-group">
-                    <input type="text" id="login" placeholder="Логин" required>
+                    <input type="text" id="login" placeholder="Логин" required autocomplete="username">
                 </div>
                 <div class="input-group">
-                    <input type="password" id="pass" placeholder="Пароль" required>
+                    <input type="password" id="pass" placeholder="Пароль" required autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn btn-prep">Создать аккаунт</button>
+                <button type="submit" class="btn btn-prep">Зарегистрироваться</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Функция открытия/закрытия формы
         function toggleModal() {
             document.getElementById('modalReg').classList.toggle('active');
         }
 
+        // Обработка отправки формы
         function handleReg(e) {
             e.preventDefault();
             const login = document.getElementById('login').value;
-            alert('Добро пожаловать, ' + login + '! Теперь вы можете начать подготовку.');
+            alert('Félicitations, ' + login + '! Аккаунт успешно создан.');
             toggleModal();
         }
 
-        // Закрытие по клику на фон
+        // Закрытие по клику на область вокруг формы
         document.getElementById('modalReg').addEventListener('click', function(e) {
             if (e.target === this) toggleModal();
+        });
+
+        // Закрытие по клавише Esc
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && document.getElementById('modalReg').classList.contains('active')) {
+                toggleModal();
+            }
         });
     </script>
 </body>

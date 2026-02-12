@@ -7,8 +7,8 @@
     <style>
         :root {
             --primary: #2563eb;
-            --accent: #60a5fa;
-            --text-main: #0f172a;
+            --primary-glow: rgba(37, 99, 235, 0.4);
+            --text-main: #1e293b;
             --text-sub: #64748b;
             --bg: #f8fafc;
         }
@@ -39,92 +39,85 @@
             font-size: clamp(3.5rem, 12vw, 6rem);
             font-weight: 800;
             margin: 0;
-            letter-spacing: 0.12em; /* Увеличенный элитный интервал */
+            letter-spacing: 0.12em; 
             text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.05));
         }
 
         .subtitle {
             font-size: clamp(1rem, 4vw, 1.3rem);
             color: var(--text-sub);
-            margin: 10px 0 40px 0;
+            margin: 10px 0 20px 0;
             letter-spacing: 0.05em;
-            font-weight: 500;
         }
 
-        /* КОМПОЗИЦИЯ АНИМАЦИИ */
+        /* УЛУЧШЕННАЯ АНИМАЦИЯ: КНИГА И ШАПКА */
         .scene {
             width: 300px;
-            height: 220px;
-            perspective: 1000px;
-            margin-bottom: 40px;
+            height: 260px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-end;
             align-items: center;
-        }
-
-        .book-container {
             position: relative;
-            width: 120px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 4px 15px 15px 4px;
-            transform: rotateX(45deg);
-            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.3);
-            animation: book-float 3s infinite ease-in-out;
+            margin-bottom: 40px;
         }
 
-        /* Страницы книги */
-        .book-container::before {
-            content: '';
-            position: absolute;
-            top: -10px; left: 5px;
-            width: 110px; height: 40px;
-            background: white;
-            border-radius: 2px 10px 10px 2px;
-            box-shadow: inset -5px 0 10px #e2e8f0;
-            animation: pages-flip 3s infinite ease-in-out;
-        }
-
-        /* Вылетающая шапочка выпускника (символ DELF) */
+        /* Парящая шапка */
         .hat {
+            font-size: 60px;
             position: absolute;
-            top: -60px;
-            font-size: 50px;
-            animation: hat-jump 3s infinite ease-in-out;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            top: 10px;
+            animation: hat-float 3s infinite ease-in-out;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
+            z-index: 2;
         }
 
-        /* Магические частицы знаний */
-        .particle {
+        /* Новая детальная книга */
+        .book {
+            width: 140px;
+            height: 100px;
+            position: relative;
+            perspective: 1000px;
+            animation: book-sway 3s infinite ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        .book-leaf {
             position: absolute;
-            width: 6px; height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            filter: blur(1px);
-            animation: particle-fly 2s infinite linear;
+            width: 70px;
+            height: 90px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 2px 10px 10px 2px;
+            box-shadow: inset -10px 0 20px #f1f5f9;
         }
 
-        @keyframes book-float {
-            0%, 100% { transform: rotateX(45deg) translateY(0); }
-            50% { transform: rotateX(55deg) translateY(-15px); }
+        .leaf-left {
+            left: 0;
+            transform: rotateY(-30deg);
+            border-radius: 10px 2px 2px 10px;
+            box-shadow: inset 10px 0 20px #f1f5f9;
         }
 
-        @keyframes hat-jump {
+        .leaf-right {
+            right: 0;
+            transform: rotateY(30deg);
+        }
+
+        @keyframes hat-float {
             0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-40px) rotate(10deg) scale(1.1); }
+            50% { transform: translateY(-30px) rotate(5deg); }
         }
 
-        @keyframes particle-fly {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+        @keyframes book-sway {
+            0%, 100% { transform: translateY(0) rotateX(20deg); }
+            50% { transform: translateY(10px) rotateX(10deg); }
         }
 
-        /* КНОПКИ ПРЫГУЧИЕ */
+        /* ВОЗВРАЩЕНЫ ТЕ САМЫЕ КНОПКИ */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -137,27 +130,26 @@
             width: 100%;
             padding: 20px;
             font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 20px;
+            font-weight: 600; /* Мягкий полужирный как в начале */
+            border-radius: 18px; /* Ваше скругление */
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Пружинистость */
             text-decoration: none;
             display: flex;
             justify-content: center;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            align-items: center;
         }
 
         .btn-prep {
             background: var(--primary);
             color: white;
-            box-shadow: 0 10px 25px -5px var(--primary-glow);
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
         }
 
         .btn-prep:hover {
-            transform: translateY(-8px) scale(1.04);
-            box-shadow: 0 25px 40px -10px var(--primary-glow);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 20px 35px -10px var(--primary-glow);
         }
 
         .btn-exam {
@@ -168,24 +160,25 @@
 
         .btn-exam:hover {
             border-color: var(--primary);
+            color: var(--primary);
             background: #f0f7ff;
-            transform: translateY(-4px) scale(1.02);
+            transform: translateY(-3px) scale(1.01);
         }
 
         .btn-reg {
             background: transparent;
             color: var(--text-sub);
             font-size: 0.95rem;
+            font-weight: 500;
             margin-top: 10px;
-            transition: 0.3s;
         }
 
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
-        .btn:active { transform: scale(0.92) !important; }
+        .btn:active { transform: scale(0.94) !important; }
 
         @media (max-width: 480px) {
-            h1 { letter-spacing: 0.08em; }
-            .scene { height: 180px; }
+            h1 { letter-spacing: 0.06em; }
+            .scene { height: 220px; }
         }
     </style>
 </head>
@@ -195,15 +188,12 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
-        <!-- Профессиональная CSS анимация -->
         <div class="scene">
             <div class="hat">🎓</div>
-            <div class="book-container"></div>
-            <!-- Частицы знаний -->
-            <div class="particle" style="--dx: -80px; --dy: -100px; animation-delay: 0.1s;"></div>
-            <div class="particle" style="--dx: 80px; --dy: -120px; animation-delay: 0.5s;"></div>
-            <div class="particle" style="--dx: 40px; --dy: -150px; animation-delay: 0.8s;"></div>
-            <div class="particle" style="--dx: -50px; --dy: -140px; animation-delay: 1.2s;"></div>
+            <div class="book">
+                <div class="book-leaf leaf-left"></div>
+                <div class="book-leaf leaf-right"></div>
+            </div>
         </div>
 
         <div class="cta-stack">
@@ -215,3 +205,4 @@
 
 </body>
 </html>
+

@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 - Preparation</title>
+    <title>DELF A1 - Préparez votre succès</title>
     
-    <!-- Подключение шрифта Inter и стабильной библиотеки Lottie -->
+    <!-- Шрифты 2024-2026 -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <script src="https://unpkg.com"></script>
     
+    <!-- Самый надежный скрипт для анимаций -->
+    <script src="https://unpkg.com" type="module"></script>
+
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
             --text-dark: #0f172a;
             --text-light: #64748b;
-            --bg: #f8fafc;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.2);
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0;
@@ -38,7 +37,7 @@
 
         .container {
             width: 100%;
-            max-width: 1280px; /* Контентная область по ТЗ */
+            max-width: 1280px; /* Десктопная сетка по ТЗ */
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
@@ -47,11 +46,11 @@
         }
 
         h1 {
-            font-size: clamp(3.2rem, 10vw, 5.5rem);
+            font-size: clamp(3.5rem, 10vw, 5.5rem);
             font-weight: 800;
             margin: 0;
             letter-spacing: -0.04em;
-            background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
+            background: linear-gradient(to bottom, #1e293b, #334155);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -59,60 +58,58 @@
         .subtitle {
             font-size: clamp(1rem, 4vw, 1.4rem);
             color: var(--text-light);
-            margin: 10px 0 30px 0;
+            margin: 15px 0 30px 0;
+            font-weight: 400;
         }
 
         /* Контейнер анимации */
-        .animation-wrapper {
+        .animation-box {
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             height: 320px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin-bottom: 25px;
         }
 
         /* Группа кнопок */
-        .cta-stack {
+        .cta-group {
             display: flex;
             flex-direction: column;
             gap: 12px;
             width: 100%;
-            max-width: 340px; /* Оптимально для Samsung S10Fe (360px) */
+            max-width: 340px; /* Оптимально для Samsung S10Fe */
         }
 
-        button, .btn-reg {
+        .btn {
             width: 100%;
-            padding: 18px 24px;
-            font-size: 1rem;
+            padding: 20px;
+            font-size: 1.05rem;
             font-weight: 600;
-            border-radius: 14px;
+            border-radius: 16px;
             border: none;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
-        /* Интерактив: Пройти подготовку */
+        /* Кнопка 1: Пройти подготовку */
         .btn-prep {
-            background: var(--primary);
+            background-color: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: var(--shadow);
         }
 
         .btn-prep:hover {
-            transform: translateY(-3px) scale(1.02);
-            background: var(--primary-hover);
-            box-shadow: 0 12px 20px rgba(37, 99, 235, 0.3);
+            background-color: var(--primary-dark);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.4);
         }
 
-        /* Интерактив: Пройти экзамен */
+        /* Кнопка 2: Пройти экзамен */
         .btn-exam {
-            background: white;
+            background-color: white;
             color: var(--text-dark);
             border: 2px solid #e2e8f0;
         }
@@ -120,15 +117,13 @@
         .btn-exam:hover {
             border-color: var(--primary);
             color: var(--primary);
-            background: #f0f7ff;
             transform: translateY(-2px);
         }
 
-        /* Интерактив: Зарегистрироваться */
+        /* Ссылка: Зарегистрироваться */
         .btn-reg {
             background: transparent;
             color: var(--text-light);
-            font-weight: 500;
             font-size: 0.95rem;
         }
 
@@ -137,15 +132,15 @@
             text-decoration: underline;
         }
 
-        /* Эффект при нажатии на мобильных */
-        button:active {
-            transform: scale(0.97);
+        /* Активное состояние (нажатие пальцем) */
+        .btn:active {
+            transform: scale(0.96) !important;
         }
 
+        /* Адаптив для Samsung S10Fe / Мобильных */
         @media (max-width: 480px) {
-            .container { padding: 20px 15px; }
-            .animation-wrapper { height: 240px; }
-            h1 { letter-spacing: -0.02em; }
+            .container { padding: 20px 16px; }
+            .animation-box { height: 260px; }
         }
     </style>
 </head>
@@ -155,33 +150,24 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
-        <!-- Анимация с человечками -->
-        <div class="animation-wrapper">
-            <lottie-player 
+        <div class="animation-box">
+            <!-- Профессиональный плеер Lottie (человечки радуются) -->
+            <dotlottie-player 
                 src="https://lottie.host" 
                 background="transparent" 
                 speed="1" 
                 style="width: 100%; height: 100%;" 
                 loop 
                 autoplay>
-            </lottie-player>
+            </dotlottie-player>
         </div>
 
-        <div class="cta-stack">
-            <button class="btn-prep">Пройти подготовку</button>
-            <button class="btn-exam">Пройти экзамен</button>
-            <a href="#" class="btn-reg">Зарегистрироваться</a>
+        <div class="cta-group">
+            <button class="btn btn-prep" onclick="location.href='#prep'">Пройти подготовку</button>
+            <button class="btn btn-exam" onclick="location.href='#exam'">Пройти экзамен</button>
+            <a href="#register" class="btn btn-reg">Зарегистрироваться</a>
         </div>
     </div>
-
-    <script>
-        // Простой лог для проверки работы кнопок
-        document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                console.log('Нажата кнопка: ' + btn.innerText);
-            });
-        });
-    </script>
 
 </body>
 </html>

@@ -8,6 +8,7 @@
         :root {
             --primary: #2563eb;
             --primary-glow: rgba(37, 99, 235, 0.4);
+            --accent: #60a5fa;
             --text-main: #1e293b;
             --text-sub: #64748b;
             --bg: #f8fafc;
@@ -53,10 +54,10 @@
             letter-spacing: 0.05em;
         }
 
-        /* УЛУЧШЕННАЯ АНИМАЦИЯ: КНИГА И ШАПКА */
+        /* КОМПОЗИЦИЯ: КНИГА + ШАПКА + ЗНАНИЯ */
         .scene {
             width: 300px;
-            height: 260px;
+            height: 280px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -72,10 +73,10 @@
             top: 10px;
             animation: hat-float 3s infinite ease-in-out;
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.1));
-            z-index: 2;
+            z-index: 5;
         }
 
-        /* Новая детальная книга */
+        /* Детальная книга */
         .book {
             width: 140px;
             height: 100px;
@@ -83,41 +84,62 @@
             perspective: 1000px;
             animation: book-sway 3s infinite ease-in-out;
             transform-style: preserve-3d;
+            z-index: 2;
         }
 
         .book-leaf {
             position: absolute;
-            width: 70px;
-            height: 90px;
+            width: 75px;
+            height: 95px;
             background: white;
             border: 2px solid var(--primary);
-            border-radius: 2px 10px 10px 2px;
             box-shadow: inset -10px 0 20px #f1f5f9;
         }
 
         .leaf-left {
             left: 0;
-            transform: rotateY(-30deg);
-            border-radius: 10px 2px 2px 10px;
+            transform: rotateY(-35deg);
+            border-radius: 12px 2px 2px 12px;
             box-shadow: inset 10px 0 20px #f1f5f9;
         }
 
         .leaf-right {
             right: 0;
-            transform: rotateY(30deg);
+            transform: rotateY(35deg);
+            border-radius: 2px 12px 12px 2px;
+        }
+
+        /* ЧАСТИЦЫ ЗНАНИЙ (Magic Sparks) */
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            filter: blur(1px);
+            bottom: 60px;
+            opacity: 0;
+            animation: particle-rise 2s infinite ease-out;
+            z-index: 3;
+        }
+
+        @keyframes particle-rise {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-160px) translateX(var(--dir)) scale(1.2); opacity: 0; }
         }
 
         @keyframes hat-float {
             0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-30px) rotate(5deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
         }
 
         @keyframes book-sway {
-            0%, 100% { transform: translateY(0) rotateX(20deg); }
-            50% { transform: translateY(10px) rotateX(10deg); }
+            0%, 100% { transform: translateY(0) rotateX(15deg); }
+            50% { transform: translateY(10px) rotateX(5deg); }
         }
 
-        /* ВОЗВРАЩЕНЫ ТЕ САМЫЕ КНОПКИ */
+        /* КНОПКИ ПРУЖИНЯЩИЕ */
         .cta-stack {
             display: flex;
             flex-direction: column;
@@ -130,11 +152,11 @@
             width: 100%;
             padding: 20px;
             font-size: 1.1rem;
-            font-weight: 600; /* Мягкий полужирный как в начале */
-            border-radius: 18px; /* Ваше скругление */
+            font-weight: 600;
+            border-radius: 18px;
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Пружинистость */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
             display: flex;
             justify-content: center;
@@ -177,8 +199,8 @@
         .btn:active { transform: scale(0.94) !important; }
 
         @media (max-width: 480px) {
-            h1 { letter-spacing: 0.06em; }
-            .scene { height: 220px; }
+            h1 { letter-spacing: 0.08em; }
+            .scene { height: 240px; }
         }
     </style>
 </head>
@@ -190,6 +212,14 @@
 
         <div class="scene">
             <div class="hat">🎓</div>
+            
+            <!-- Летающие частицы знаний -->
+            <div class="particle" style="--dir: -40px; animation-delay: 0s;"></div>
+            <div class="particle" style="--dir: 30px; animation-delay: 0.4s;"></div>
+            <div class="particle" style="--dir: -10px; animation-delay: 0.8s;"></div>
+            <div class="particle" style="--dir: 50px; animation-delay: 1.2s;"></div>
+            <div class="particle" style="--dir: -60px; animation-delay: 1.6s;"></div>
+
             <div class="book">
                 <div class="book-leaf leaf-left"></div>
                 <div class="book-leaf leaf-right"></div>
@@ -205,4 +235,3 @@
 
 </body>
 </html>
-

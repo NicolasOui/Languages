@@ -3,104 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DELF A1 Preparation</title>
+    <title>DELF A1 - Подготовка к экзамену</title>
+    <!-- Шрифты и Lottie-плеер -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <script src="https://unpkg.com" type="module"></script>
+    
     <style>
         :root {
             --primary: #2563eb;
-            --text-dark: #1e293b;
+            --primary-hover: #1d4ed8;
+            --text-dark: #0f172a;
             --text-light: #64748b;
-            --bg: #f9fafb;
+            --bg: #f8fafc;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
+            padding: 0;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text-dark);
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 1280px; /* Десктопная область по ТЗ */
-            padding: 0 20px;
-            min-height: 100vh;
+            max-width: 1280px; /* Контентная область по ТЗ */
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
         }
 
         h1 {
-            font-size: clamp(3rem, 10vw, 5rem); /* Адаптивный размер */
+            font-size: clamp(3.5rem, 12vw, 6rem); /* Адаптивный размер для Samsung и Desktop */
             font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
             color: var(--text-light);
-            margin-bottom: 40px;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            font-weight: 400;
         }
 
-        /* Заглушка для анимации */
-        .animation-box {
+        /* Контейнер для анимации */
+        .animation-wrapper {
             width: 100%;
-            max-width: 400px;
-            height: 250px;
-            margin-bottom: 40px;
-            background: #e2e8f0;
-            border-radius: 24px;
+            max-width: 500px;
+            height: 300px;
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.05));
+        }
+
+        /* Группа кнопок с интерактивом */
+        .cta-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 340px; /* Идеально для S10Fe */
+        }
+
+        button {
+            width: 100%;
+            padding: 20px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
 
-        /* Простая CSS-анимация (радость) */
-        .stickman { font-size: 50px; animation: jump 0.5s infinite alternate; }
-        @keyframes jump { from { transform: translateY(0); } to { transform: translateY(-20px); } }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
-            max-width: 320px; /* Удобно для мобильных и Samsung S10Fe */
+        /* Кнопка: Пройти подготовку */
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
 
-        button {
-            padding: 18px 32px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
+        .btn-main:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: var(--primary-hover);
+            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.25);
         }
 
-        .btn-prep { background: var(--primary); color: white; }
-        .btn-prep:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+        /* Кнопка: Пройти экзамен */
+        .btn-outline {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid #e2e8f0;
+        }
 
-        .btn-exam { background: white; border: 2px solid #e2e8f0; color: var(--text-dark); }
-        .btn-exam:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
 
-        .btn-reg {
+        /* Ссылка: Зарегистрироваться */
+        .btn-link {
             background: transparent;
             color: var(--text-light);
-            text-decoration: underline;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            text-decoration: none;
+            margin-top: 10px;
+            padding: 10px;
+            display: inline-block;
         }
 
-        /* Адаптив для Samsung S10Fe (360px+) */
+        .btn-link:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Эффект активного нажатия (фидбек) */
+        button:active {
+            transform: scale(0.96) !important;
+        }
+
+        /* Адаптация под мобильные (Samsung S10Fe / S21 / iPhone) */
         @media (max-width: 480px) {
-            .container { padding: 40px 15px; }
-            .animation-box { height: 180px; }
+            .container { padding: 20px 16px; }
+            .animation-wrapper { height: 220px; }
+            h1 { letter-spacing: -0.02em; }
         }
     </style>
 </head>
@@ -110,15 +161,22 @@
         <h1>DELF A1</h1>
         <p class="subtitle">Tests pour se préparer à l'examen</p>
 
-        <div class="animation-box">
-            <!-- Здесь будет ваш Lottie или GIF -->
-            <div class="stickman">🙌🥳</div>
+        <div class="animation-wrapper">
+            <!-- Профессиональная анимация успеха: два человечка радуются -->
+            <dotlottie-player 
+                src="https://lottie.host" 
+                background="transparent" 
+                speed="1.2" 
+                style="width: 100%; height: 100%;" 
+                loop 
+                autoplay>
+            </dotlottie-player>
         </div>
 
-        <div class="btn-group">
-            <button class="btn-prep">Пройти подготовку</button>
-            <button class="btn-exam">Пройти экзамен</button>
-            <button class="btn-reg">Зарегистрироваться</button>
+        <div class="cta-stack">
+            <button class="btn-main" onclick="console.log('Подготовка')">Пройти подготовку</button>
+            <button class="btn-outline" onclick="console.log('Экзамен')">Пройти экзамен</button>
+            <a href="#" class="btn-link">Зарегистрироваться</a>
         </div>
     </div>
 

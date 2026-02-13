@@ -19,11 +19,8 @@
         return to;
     };
     var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-    // Внутренние утилиты Supabase
     const STORAGE_KEY = "supabase.auth.token";
     const DEFAULT_HEADERS = { "X-Client-Info": "supabase-js/2.39.7" };
-
     class SupabaseClient {
         constructor(supabaseUrl, supabaseKey, options = {}) {
             this.supabaseUrl = supabaseUrl;
@@ -77,8 +74,6 @@
     const createClient = (supabaseUrl, supabaseKey, options = {}) => {
         return new SupabaseClient(supabaseUrl, supabaseKey, options);
     };
-
-    // Экспортируем функции в глобальное пространство
     exports.createClient = createClient;
     exports.SupabaseClient = SupabaseClient;
     Object.defineProperty(exports, '__esModule', { value: true });

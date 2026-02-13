@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELF A1 - Apprentissage & Préparation</title>
     
-    <!-- ПОДКЛЮЧАЕМ ТВОЙ ЛОКАЛЬНЫЙ ФАЙЛ БИБЛИОТЕКИ -->
+    <!-- ПОДКЛЮЧАЕМ ТВОЙ ЛОКАЛЬНЫЙ ФАЙЛ БИБЛИОТЕКИ (ИЗ 4 ЧАСТЕЙ) -->
     <script src="supabase.js"></script>
     
     <style>
@@ -106,14 +106,35 @@
         .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
         .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px) scale(1.01); }
 
+        /* ОБЩИЙ СТИЛЬ ДЛЯ КНОПОК-ССЫЛОК (РЕГИСТРАЦИЯ И ВЫХОД) */
         .btn-reg { 
             background: transparent; color: var(--text-sub); 
             font-size: 0.95rem; margin-top: 10px; font-weight: 500; 
             cursor: pointer; border: none; outline: none;
+            transition: color 0.3s ease;
         }
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
-        /* ОФОРМЛЕНИЕ МОДАЛЬНОГО ОКНО */
+        /* СТИЛЬ ДЛЯ ПРОФИЛЯ (КОГДА ВОШЕЛ) */
+        #userProfile {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: none; /* Скрыто до входа */
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-logout {
+            font-size: 0.85rem;
+            color: #ef4444; 
+            text-decoration: none;
+        }
+        .btn-logout:hover { color: #b91c1c; }
+
+        /* МОДАЛЬНОЕ ОКНО */
         .modal-overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -162,13 +183,8 @@
             color: var(--text-sub); cursor: pointer;
         }
 
-        /* БЛОК ДЛЯ СТАТУСНЫХ СООБЩЕНИЙ */
         #statusMsg {
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 10px;
-            display: none; /* Скрыто по умолчанию */
+            font-size: 0.9rem; margin-bottom: 15px; padding: 10px; border-radius: 10px; display: none;
         }
     </style>
 </head>
@@ -180,6 +196,7 @@
 
         <div class="scene">
             <div class="hat" id="mainHat">🎓</div>
+            <!-- Частицы -->
             <div class="sparkle" style="--x: -60px; left: 40%; animation-delay: 0s;"></div>
             <div class="sparkle" style="--x: 50px; left: 50%; animation-delay: 0.4s;"></div>
             <div class="sparkle" style="--x: -20px; left: 60%; animation-delay: 0.8s;"></div>
@@ -190,7 +207,15 @@
         <div class="cta-stack">
             <button class="btn btn-prep" onclick="location.href='#prep'">Пройти подготовку</button>
             <button class="btn btn-exam" onclick="location.href='#exam'">Пройти экзамен</button>
-            <button class="btn-reg" onclick="window.toggleModal()">Зарегистрироваться / Войти</button>
+            
+            <!-- БЛОК ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
+            <div id="userProfile">
+                <span id="userEmail"></span>
+                <button onclick="window.handleLogout()" class="btn-reg btn-logout">(Выйти)</button>
+            </div>
+            
+            <!-- КНОПКА ВХОДА (ID ТЕПЕРЬ regBtn) -->
+            <button id="regBtn" class="btn-reg" onclick="window.toggleModal()">Зарегистрироваться / Войти</button>
         </div>
     </div>
 
@@ -202,10 +227,7 @@
             <div id="authBlock">
                 <h2 id="authTitle">Вход</h2>
                 <p id="authSub">Введите данные вашего аккаунта</p>
-                
-                <!-- КРАСИВОЕ УВЕДОМЛЕНИЕ ВНУТРИ -->
                 <div id="statusMsg"></div>
-
                 <form onsubmit="window.handleAuth(event)">
                     <div class="input-group"><input type="email" id="login" placeholder="Email" required></div>
                     <div class="input-group"><input type="password" id="pass" placeholder="Пароль" required minlength="6"></div>
@@ -217,7 +239,6 @@
                 </div>
             </div>
 
-            <!-- БЛОК СБРОСА ПАРОЛЯ -->
             <div id="resetBlock" style="display: none;">
                 <h2>Сброс пароля</h2>
                 <p>Ссылка придет на ваш Email</p>
@@ -228,7 +249,6 @@
                 <button class="btn-reg" style="display:block; margin: 20px auto 0 auto;" onclick="window.showView('auth')">Назад</button>
             </div>
 
-            <!-- БЛОК УСТАНОВКИ НОВОГО ПАРОЛЯ -->
             <div id="newPassBlock" style="display: none;">
                 <h2>Новый пароль</h2>
                 <p>Придумайте новый пароль</p>
@@ -241,7 +261,7 @@
     </div>
 
     <script>
-        // ИНИЦИАЛИЗАЦИЯ SUPABASE
+        // ИНИЦИАЛИЗАЦИЯ (Используем твой supabase.js)
         const _supabase = window.supabase ? supabase.createClient(
             'https://fceltmajcgvmjtmqmbuh.supabase.co', 
             'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
@@ -249,7 +269,7 @@
 
         let isLoginMode = true;
 
-        // ФУНКЦИЯ: Показать статусное сообщение (успех или ошибка)
+        // ФУНКЦИЯ: Показать статус в модалке
         function showStatus(text, isError = false) {
             const status = document.getElementById('statusMsg');
             status.innerText = text;
@@ -258,24 +278,36 @@
             status.style.color = isError ? '#dc2626' : '#16a34a';
         }
 
-        // ОТКРЫТИЕ / ЗАКРЫТИЕ МОДАЛКИ
+        // ФУНКЦИЯ: Обновить интерфейс (Профиль или Кнопка входа)
+        function updateUI(user) {
+            const regBtn = document.getElementById('regBtn');
+            const profile = document.getElementById('userProfile');
+            const emailSpan = document.getElementById('userEmail');
+
+            if (user) {
+                regBtn.style.display = 'none';
+                profile.style.display = 'flex';
+                emailSpan.innerText = "Salut, " + user.email.split('@')[0] + "! 👋";
+            } else {
+                regBtn.style.display = 'block';
+                profile.style.display = 'none';
+            }
+        }
+
         window.toggleModal = function() {
             const modal = document.getElementById('modalReg');
             if (modal) {
                 modal.classList.toggle('active');
-                // Скрываем статус при открытии/закрытии
                 document.getElementById('statusMsg').style.display = 'none';
             }
         };
 
-        // НАВИГАЦИЯ МЕЖДУ ВИДАМИ (Вход / Сброс / Новый пароль)
         window.showView = function(viewName) {
             const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
             Object.values(blocks).forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById(blocks[viewName]).style.display = 'block';
         };
 
-        // ПЕРЕКЛЮЧЕНИЕ "ВХОД" / "РЕГИСТРАЦИЯ"
         window.toggleAuthMode = function() {
             isLoginMode = !isLoginMode;
             document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Создать аккаунт';
@@ -284,10 +316,10 @@
             document.getElementById('statusMsg').style.display = 'none';
         };
 
-        // ЛОГИКА АВТОРИЗАЦИИ И РЕГИСТРАЦИИ (С обработкой ошибок 400 и 422)
+        // ВХОД И РЕГИСТРАЦИЯ
         window.handleAuth = async function(e) {
             e.preventDefault();
-            if (!_supabase) return alert("Библиотека базы данных не загружена.");
+            if (!_supabase) return alert("База не подключена");
 
             const btn = document.getElementById('submitBtn');
             const email = document.getElementById('login').value;
@@ -296,61 +328,73 @@
             btn.innerText = "Загрузка...";
             btn.disabled = true;
 
-            const { error } = isLoginMode 
+            const { data, error } = isLoginMode 
                 ? await _supabase.auth.signInWithPassword({ email, password: pass })
                 : await _supabase.auth.signUp({ email, password: pass });
 
             if (error) {
-                // ПИШЕМ КРАСИВУЮ ОШИБКУ ВНУТРИ МОДАЛКИ
                 showStatus(error.message, true);
-                console.error("Ошибка Supabase:", error);
             } else {
-                // ПИШЕМ УСПЕХ
-                showStatus(isLoginMode ? "С возвращением!" : "Аккаунт создан! Можно входить.", false);
-                
-                // Победный прыжок шапки
+                showStatus(isLoginMode ? "С возвращением!" : "Аккаунт создан!", false);
                 const hat = document.getElementById('mainHat');
                 if (hat) {
                     hat.classList.add('success-jump');
                     setTimeout(() => hat.classList.remove('success-jump'), 1000);
                 }
-
-                // Закрываем модалку через 2 секунды после успеха
-                setTimeout(() => {
-                    window.toggleModal();
-                }, 2000);
+                // UI обновится автоматически через onAuthStateChange
+                setTimeout(() => window.toggleModal(), 2000);
             }
             btn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
             btn.disabled = false;
         };
 
-        // ЛОГИКА СБРОСА ПАРОЛЯ
-        window.handleResetPassword = async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('resetEmail').value;
-            const { error } = await _supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-            if (error) alert("Ошибка: " + error.message);
-            else { alert("Инструкции отправлены!"); window.showView('auth'); }
+        // ВЫХОД
+        window.handleLogout = async function() {
+            if (_supabase) {
+                await _supabase.auth.signOut();
+                // UI обновится сам
+            }
         };
 
-        // ЛОГИКА ОБНОВЛЕНИЯ ПАРОЛЯ
-        window.handleUpdatePassword = async function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('newPass').value;
-            const { error } = await _supabase.auth.updateUser({ password: pass });
-            if (error) alert("Ошибка: " + error.message);
-            else { alert("Пароль обновлен успешно!"); window.toggleModal(); window.showView('auth'); }
-        };
+        // СЛУШАТЕЛЬ СЕССИИ (Главный "мозг" системы)
+        window.addEventListener('load', async () => {
+            if (!_supabase) return;
 
-        // СОБЫТИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
-        window.addEventListener('load', () => {
+            // Проверяем, кто вошел прямо сейчас
+            const { data: { user } } = await _supabase.auth.getUser();
+            updateUI(user);
+
+            // Следим за изменениями (вход/выход)
+            _supabase.auth.onAuthStateChange((event, session) => {
+                updateUI(session?.user ?? null);
+            });
+
+            // Восстановление пароля
             if (window.location.hash.includes('type=recovery')) {
                 window.toggleModal();
                 window.showView('newPass');
             }
+            
             const m = document.getElementById('modalReg');
             if (m) m.addEventListener('click', (e) => { if (e.target === m) window.toggleModal(); });
         });
+
+        // СБРОС И ОБНОВЛЕНИЕ ПАРОЛЯ
+        window.handleResetPassword = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+            if (error) alert(error.message);
+            else { alert("Инструкции на почте!"); window.showView('auth'); }
+        };
+
+        window.handleUpdatePassword = async (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('newPass').value;
+            const { error } = await _supabase.auth.updateUser({ password: pass });
+            if (error) alert(error.message);
+            else { alert("Пароль обновлен!"); window.toggleModal(); window.showView('auth'); }
+        };
     </script>
 </body>
 </html>

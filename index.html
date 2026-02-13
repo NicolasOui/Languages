@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELF A1 - Apprentissage & Préparation</title>
     
-    <!-- ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE -->
+    <!-- 1. ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE -->
     <script src="https://cdn.jsdelivr.net"></script>
     
     <style>
@@ -105,7 +105,7 @@
         .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
         .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px) scale(1.01); }
 
-        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; cursor: pointer; }
+        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; cursor: pointer; border:none;}
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
         /* МОДАЛЬНОЕ ОКНО */
@@ -115,7 +115,7 @@
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(10px);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100; opacity: 0; visibility: hidden;
+            z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
@@ -176,7 +176,7 @@
         <div class="cta-stack">
             <button class="btn btn-prep" onclick="location.href='#prep'">Пройти подготовку</button>
             <button class="btn btn-exam" onclick="location.href='#exam'">Пройти экзамен</button>
-            <a class="btn btn-reg" onclick="toggleModal()">Зарегистрироваться / Войти</a>
+            <button class="btn-reg" onclick="toggleModal()">Зарегистрироваться / Войти</button>
         </div>
     </div>
 
@@ -224,20 +224,25 @@
     </div>
 
     <script>
-        // Инициализация Supabase
+        // Инициализация
         const _supabase = supabase.createClient('https://fceltmajcgvmjtmqmbuh.supabase.co', 'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q');
-
-        const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
-        const hat = document.getElementById('mainHat');
+        
         const modal = document.getElementById('modalReg');
+        const hat = document.getElementById('mainHat');
         let isLoginMode = true;
 
-        function showView(viewName) {
+        // Глобальные функции
+        window.toggleModal = function() {
+            modal.classList.toggle('active');
+        }
+
+        window.showView = function(viewName) {
+            const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
             Object.values(blocks).forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById(blocks[viewName]).style.display = 'block';
         }
 
-        function toggleAuthMode() {
+        window.toggleAuthMode = function() {
             isLoginMode = !isLoginMode;
             document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Создать аккаунт';
             document.getElementById('authSub').innerText = isLoginMode ? 'Введите данные вашего аккаунта' : 'Ваш персональный прогресс обучения';
@@ -245,18 +250,17 @@
             document.getElementById('switchBtn').innerText = isLoginMode ? 'Нет аккаунта? Создать' : 'Уже есть аккаунт? Войти';
         }
 
-        function toggleModal() { modal.classList.toggle('active'); }
-
-        // 1. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
-        async function handleAuth(e) {
+        // Логика авторизации
+        window.handleAuth = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const email = document.getElementById('login').value;
             const pass = document.getElementById('pass').value;
+            
             btn.innerText = "Загрузка...";
             btn.disabled = true;
 
-            const { data, error } = isLoginMode 
+            const { error } = isLoginMode 
                 ? await _supabase.auth.signInWithPassword({ email, password: pass })
                 : await _supabase.auth.signUp({ email, password: pass });
 
@@ -272,8 +276,8 @@
             btn.disabled = false;
         }
 
-        // 2. СБРОС ПАРОЛЯ (ОТПРАВКА ПИСЬМА)
-        async function handleResetPassword(e) {
+        // Логика сброса
+        window.handleResetPassword = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('resetBtn');
             const email = document.getElementById('resetEmail').value;
@@ -285,15 +289,15 @@
             });
 
             if (error) alert("Ошибка: " + error.message);
-            else alert("Инструкции отправлены! Проверьте почту (и папку СПАМ).");
+            else alert("Инструкции отправлены! Проверьте папку СПАМ.");
             
             btn.innerText = "Отправить ссылку";
             btn.disabled = false;
             showView('auth');
         }
 
-        // 3. СОХРАНЕНИЕ НОВОГО ПАРОЛЯ (ПОСЛЕ ПЕРЕХОДА ИЗ ПОЧТЫ)
-        async function handleUpdatePassword(e) {
+        // Логика обновления пароля
+        window.handleUpdatePassword = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('updateBtn');
             const pass = document.getElementById('newPass').value;
@@ -302,10 +306,9 @@
 
             const { error } = await _supabase.auth.updateUser({ password: pass });
 
-            if (error) {
-                alert("Ошибка: " + error.message);
-            } else {
-                alert("Пароль успешно обновлен!");
+            if (error) alert("Ошибка: " + error.message);
+            else {
+                alert("Пароль обновлен!");
                 showView('auth');
                 toggleModal();
             }
@@ -313,7 +316,7 @@
             btn.disabled = false;
         }
 
-        // ЛОВИМ ВОЗВРАТ ИЗ ПОЧТЫ (ТИП RECOVERY)
+        // Слушатель для восстановления из письма
         window.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash.includes('type=recovery')) {
                 toggleModal();
@@ -321,7 +324,7 @@
             }
         });
 
-        // Закрытие модалки по клику на фон
+        // Закрытие по фону
         modal.addEventListener('click', (e) => { if (e.target === modal) toggleModal(); });
     </script>
 </body>

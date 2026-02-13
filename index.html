@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELF A1 - Apprentissage & Préparation</title>
-    <!-- 1. ПОДКЛЮЧАЕМ БИБЛИОТЕКУ (ПЕРЕВОДЧИК) -->
+    
+    <!-- 1. ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE -->
     <script src="https://cdn.jsdelivr.net"></script>
     
     <style>
@@ -107,6 +108,7 @@
         .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; }
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
+        /* МОДАЛЬНОЕ ОКНО */
         .modal-overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -144,7 +146,7 @@
             width: 100%; padding: 18px; border-radius: 14px;
             border: 2px solid #f1f5f9; background: #f8fafc;
             font-size: 1rem; font-family: inherit;
-            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
         }
 
         .input-group input:focus {
@@ -187,6 +189,7 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="modal-overlay" id="modalReg">
         <div class="modal-content">
             <button class="close-btn" onclick="toggleModal()">&times;</button>
@@ -207,55 +210,79 @@
 
     <script>
         // 2. ИНИЦИАЛИЗАЦИЯ SUPABASE
-        const _supabase = supabase.createClient(
-            'https://fceltmajcgvmjtmqmbuh.supabase.co', 
-            'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
-        );
+        const SUPABASE_URL = 'https://fceltmajcgvmjtmqmbuh.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q';
+
+        // Проверяем наличие библиотеки перед созданием клиента
+        let _supabase;
+        if (window.supabase) {
+            _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else {
+            console.error("Supabase library not loaded!");
+        }
 
         const modal = document.getElementById('modalReg');
         const hat = document.getElementById('mainHat');
         const submitBtn = document.getElementById('submitBtn');
 
+        // Открытие/Закрытие окна
         function toggleModal() {
-            modal.classList.toggle('active');
+            if (modal) {
+                modal.classList.toggle('active');
+            }
         }
 
-        // 3. ФУНКЦИЯ РЕГИСТРАЦИИ
+        // РЕГИСТРАЦИЯ
         async function handleReg(e) {
             e.preventDefault();
             
+            if (!_supabase) {
+                alert("Ошибка соединения с базой данных");
+                return;
+            }
+
             const email = document.getElementById('login').value;
             const password = document.getElementById('pass').value;
             
+            // Визуальный фидбек
             submitBtn.innerText = "Загрузка...";
             submitBtn.disabled = true;
 
-            const { data, error } = await _supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
+            try {
+                const { data, error } = await _supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                });
 
-            if (error) {
-                alert("Ошибка: " + error.message);
-                submitBtn.innerText = "Зарегистрироваться";
-                submitBtn.disabled = false;
-            } else {
-                toggleModal();
-                // Победный прыжок шапки
+                if (error) throw error;
+
+                // Успех!
+                toggleModal(); // Закрываем окно
+                
+                // Прыжок шапки
                 setTimeout(() => {
                     hat.classList.add('success-jump');
                     setTimeout(() => {
                         hat.classList.remove('success-jump');
                     }, 1000);
                 }, 300);
-                alert("Успешно! Проверьте почту для подтверждения (если не отключили в настройках)");
+
+                alert("Регистрация прошла успешно!");
+
+            } catch (err) {
+                alert("Ошибка: " + err.message);
+            } finally {
+                submitBtn.innerText = "Зарегистрироваться";
+                submitBtn.disabled = false;
             }
         }
 
+        // Закрытие по клику на фон
         modal.addEventListener('click', (e) => {
             if (e.target === modal) toggleModal();
         });
 
+        // Закрытие по ESC
         window.addEventListener('keydown', (e) => {
             if (e.key === "Escape" && modal.classList.contains('active')) toggleModal();
         });

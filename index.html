@@ -6,7 +6,22 @@
     <title>DELF A1 - Apprentissage & Préparation</title>
     
     <!-- ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE (ПРАВИЛА ОБЩЕНИЯ С БАЗОЙ) -->
-    <script src="https://cdnjs.cloudflare.com"></script>
+    <script src="supabase.js"></script>
+<script>
+    // Теперь библиотека лежит у тебя в папке и подгрузится мгновенно
+    const _supabase = window.supabase ? supabase.createClient(
+        'https://fceltmajcgvmjtmqmbuh.supabase.co', 
+        'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
+    ) : null;
+
+    if (_supabase) {
+        console.log("✅ ЛОКАЛЬНАЯ БИБЛИОТЕКА РАБОТАЕТ!");
+    } else {
+        console.error("❌ Файл supabase.js пуст или не найден!");
+    }
+
+    // Твои функции handleAuth и toggleModal остаются без изменений
+</script>
     
     <style>
         :root {
@@ -357,6 +372,7 @@
     </script>
 </body>
 </html>
+
 
 
 

@@ -7,21 +7,6 @@
     
     <!-- ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE (ПРАВИЛА ОБЩЕНИЯ С БАЗОЙ) -->
     <script src="supabase.js"></script>
-<script>
-    // Теперь библиотека лежит у тебя в папке и подгрузится мгновенно
-    const _supabase = window.supabase ? supabase.createClient(
-        'https://fceltmajcgvmjtmqmbuh.supabase.co', 
-        'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
-    ) : null;
-
-    if (_supabase) {
-        console.log("✅ ЛОКАЛЬНАЯ БИБЛИОТЕКА РАБОТАЕТ!");
-    } else {
-        console.error("❌ Файл supabase.js пуст или не найден!");
-    }
-
-    // Твои функции handleAuth и toggleModal остаются без изменений
-</script>
     
     <style>
         :root {
@@ -246,132 +231,26 @@
     </div>
 
     <script>
-        // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-        let _supabase = null;
-        let isLoginMode = true;
+        // 1. Инициализация из твоего сообщения
+        const _supabase = window.supabase ? supabase.createClient(
+            'https://fceltmajcgvmjtmqmbuh.supabase.co', 
+            'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
+        ) : null;
 
-        // 1. ИНИЦИАЛИЗАЦИЯ: Функция, которая подключает сайт к базе данных
-        function initApp() {
-            // Проверяем, загрузилась ли библиотека из интернета
-            const lib = window.supabase;
-            
-            if (lib) {
-                _supabase = lib.createClient(
-                    'https://fceltmajcgvmjtmqmbuh.supabase.co', 
-                    'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
-                );
-                console.log("Supabase подключен успешно!");
-            } else {
-                // Если библиотека еще не прогрузилась, пробуем снова через секунду
-                console.warn("Библиотека Supabase еще подгружается...");
-                setTimeout(initApp, 1000);
-            }
+        if (_supabase) {
+            console.log("✅ ЛОКАЛЬНАЯ БИБЛИОТЕКА РАБОТАЕТ!");
+        } else {
+            console.error("❌ Файл supabase.js пуст или не найден!");
         }
 
-        // Запускаем инициализацию при старте скрипта
-        initApp();
-
-        // 2. МОДАЛКА: Функция открытия и закрытия окна
-        window.toggleModal = function() {
-            const modal = document.getElementById('modalReg');
-            if (modal) modal.classList.toggle('active');
-        };
-
-        // 3. НАВИГАЦИЯ: Переключение между Входом, Сбросом пароля и Новым паролем
-        window.showView = function(viewName) {
-            const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
-            Object.values(blocks).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
-            const target = document.getElementById(blocks[viewName]);
-            if (target) target.style.display = 'block';
-        };
-
-        // 4. ПЕРЕКЛЮЧАТЕЛЬ: Смена режима между "Войти" и "Создать аккаунт"
-        window.toggleAuthMode = function() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Создать аккаунт';
-            document.getElementById('submitBtn').innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-            document.getElementById('switchBtn').innerText = isLoginMode ? 'Нет аккаунта? Создать' : 'Уже есть аккаунт? Войти';
-        };
-
-        // 5. ЛОГИКА АВТОРИЗАЦИИ: Отправка данных Email и Пароля в Supabase
-        window.handleAuth = async function(e) {
-            e.preventDefault();
-            
-            // Если база данных еще не готова к работе
-            if (!_supabase) {
-                alert("Подождите, идет подключение к базе данных...");
-                return;
-            }
-
-            const btn = document.getElementById('submitBtn');
-            const email = document.getElementById('login').value;
-            const pass = document.getElementById('pass').value;
-            
-            btn.innerText = "Загрузка...";
-            btn.disabled = true;
-
-            // Выполняем либо вход, либо регистрацию
-            const { error } = isLoginMode 
-                ? await _supabase.auth.signInWithPassword({ email, password: pass })
-                : await _supabase.auth.signUp({ email, password: pass });
-
-            if (error) {
-                alert("Ошибка: " + error.message);
-            } else {
-                window.toggleModal();
-                // Запускаем праздничный прыжок шапки
-                const hat = document.getElementById('mainHat');
-                if (hat) {
-                    hat.classList.add('success-jump');
-                    setTimeout(() => hat.classList.remove('success-jump'), 1000);
-                }
-                alert(isLoginMode ? "Вы успешно вошли!" : "Аккаунт создан!");
-            }
-            btn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
-            btn.disabled = false;
-        };
-
-        // 6. СБРОС ПАРОЛЯ: Запрос ссылки на почту
-        window.handleResetPassword = async function(e) {
-            e.preventDefault();
-            if (!_supabase) return;
-            const email = document.getElementById('resetEmail').value;
-            const { error } = await _supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
-            if (error) alert("Ошибка: " + error.message);
-            else { alert("Инструкции отправлены на почту!"); window.showView('auth'); }
-        };
-
-        // 7. СОХРАНЕНИЕ ПАРОЛЯ: Когда пользователь пришел из письма сброса
-        window.handleUpdatePassword = async function(e) {
-            e.preventDefault();
-            if (!_supabase) return;
-            const pass = document.getElementById('newPass').value;
-            const { error } = await _supabase.auth.updateUser({ password: pass });
-            if (error) alert("Ошибка: " + error.message);
-            else { 
-                alert("Пароль успешно обновлен!"); 
-                window.toggleModal(); 
-                window.showView('auth'); 
-            }
-        };
-
-        // 8. ЗАГРУЗКА СТРАНИЦЫ: Ловим токены из почты и настраиваем клики
-        window.addEventListener('load', () => {
-            // Если в ссылке есть "type=recovery", значит юзер пришел из письма для смены пароля
-            if (window.location.hash.includes('type=recovery')) {
-                window.toggleModal();
-                window.showView('newPass');
-            }
-            // Закрытие модалки при клике на серый фон вокруг
-            const m = document.getElementById('modalReg');
-            if (m) m.addEventListener('click', (e) => { if (e.target === m) window.toggleModal(); });
-        });
+        // 2. Твои функции (handleAuth, toggleModal и т.д.)
+        function toggleModal() { ... }
+        async function handleAuth(e) { ... }
+        // ... и так далее
     </script>
 </body>
 </html>
+
 
 
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELF A1 - Apprentissage & Préparation</title>
     
-    <!-- 1. ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE -->
+    <!-- ПОДКЛЮЧАЕМ БИБЛИОТЕКУ SUPABASE -->
     <script src="https://cdn.jsdelivr.net"></script>
     
     <style>
@@ -105,7 +105,7 @@
         .btn-exam { background: white; color: var(--text-main); border: 2px solid #e2e8f0; }
         .btn-exam:hover { border-color: var(--primary); background: #f0f7ff; transform: translateY(-3px) scale(1.01); }
 
-        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; }
+        .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; cursor: pointer; }
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
         /* МОДАЛЬНОЕ ОКНО */
@@ -125,6 +125,7 @@
             transform: translateY(60px) scale(0.9);
             transition: transform 0.4s var(--easing);
             box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
 
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -132,38 +133,28 @@
 
         .modal-content h2 { 
             font-weight: 800; margin: 0 0 12px 0; 
-            letter-spacing: 0.1em;
             font-size: 1.7rem; text-transform: uppercase;
             background: linear-gradient(135deg, #0f172a 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .modal-content p { color: var(--text-sub); margin-bottom: 30px; font-size: 0.95rem; letter-spacing: 0.03em; }
+        .modal-content p { color: var(--text-sub); margin-bottom: 30px; font-size: 0.95rem; }
 
         .input-group { margin-bottom: 18px; text-align: left; }
         .input-group input {
             width: 100%; padding: 18px; border-radius: 14px;
             border: 2px solid #f1f5f9; background: #f8fafc;
             font-size: 1rem; font-family: inherit;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
+            transition: border-color 0.2s ease;
         }
 
-        .input-group input:focus {
-            outline: none; border-color: var(--primary);
-            background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
+        .input-group input:focus { outline: none; border-color: var(--primary); background: white; }
 
         .close-btn {
             position: absolute; top: 22px; right: 22px;
             background: none; border: none; font-size: 28px;
             color: var(--text-sub); cursor: pointer;
-        }
-
-        @media (max-width: 480px) {
-            h1 { letter-spacing: 0.08em; }
-            .hat { font-size: 85px; }
-            .scene { height: 260px; }
         }
     </style>
 </head>
@@ -185,7 +176,7 @@
         <div class="cta-stack">
             <button class="btn btn-prep" onclick="location.href='#prep'">Пройти подготовку</button>
             <button class="btn btn-exam" onclick="location.href='#exam'">Пройти экзамен</button>
-            <a href="javascript:void(0)" class="btn btn-reg" onclick="toggleModal()">Зарегистрироваться</a>
+            <a class="btn btn-reg" onclick="toggleModal()">Зарегистрироваться / Войти</a>
         </div>
     </div>
 
@@ -193,99 +184,145 @@
     <div class="modal-overlay" id="modalReg">
         <div class="modal-content">
             <button class="close-btn" onclick="toggleModal()">&times;</button>
-            <h2>Создать аккаунт</h2>
-            <p>Ваш персональный прогресс обучения</p>
             
-            <form onsubmit="handleReg(event)">
-                <div class="input-group">
-                    <input type="email" id="login" placeholder="Email" required autocomplete="email">
+            <!-- БЛОК 1: ВХОД / РЕГИСТРАЦИЯ -->
+            <div id="authBlock">
+                <h2 id="authTitle">Вход</h2>
+                <p id="authSub">Введите данные вашего аккаунта</p>
+                <form onsubmit="handleAuth(event)">
+                    <div class="input-group"><input type="email" id="login" placeholder="Email" required></div>
+                    <div class="input-group"><input type="password" id="pass" placeholder="Пароль (мин. 6 симв.)" required minlength="6"></div>
+                    <button type="submit" id="submitBtn" class="btn btn-prep">Войти</button>
+                </form>
+                <div style="margin-top:20px;">
+                    <a href="javascript:void(0)" class="btn-reg" id="switchBtn" onclick="toggleAuthMode()">Нет аккаунта? Создать</a><br><br>
+                    <a href="javascript:void(0)" class="btn-reg" onclick="showView('reset')">Забыли пароль?</a>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="pass" placeholder="Пароль" required autocomplete="new-password">
-                </div>
-                <button type="submit" id="submitBtn" class="btn btn-prep">Зарегистрироваться</button>
-            </form>
+            </div>
+
+            <!-- БЛОК 2: СБРОС ПАРОЛЯ -->
+            <div id="resetBlock" style="display: none;">
+                <h2>Сброс пароля</h2>
+                <p>Мы отправим ссылку на ваш Email</p>
+                <form onsubmit="handleResetPassword(event)">
+                    <div class="input-group"><input type="email" id="resetEmail" placeholder="Ваш Email" required></div>
+                    <button type="submit" id="resetBtn" class="btn btn-prep">Отправить ссылку</button>
+                </form>
+                <a href="javascript:void(0)" class="btn-reg" style="display:block; margin-top:20px;" onclick="showView('auth')">Вернуться назад</a>
+            </div>
+
+            <!-- БЛОК 3: УСТАНОВКА НОВОГО ПАРОЛЯ -->
+            <div id="newPassBlock" style="display: none;">
+                <h2>Новый пароль</h2>
+                <p>Введите новый пароль для входа</p>
+                <form onsubmit="handleUpdatePassword(event)">
+                    <div class="input-group"><input type="password" id="newPass" placeholder="Минимум 6 символов" required minlength="6"></div>
+                    <button type="submit" id="updateBtn" class="btn btn-prep">Сохранить пароль</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // 2. ИНИЦИАЛИЗАЦИЯ SUPABASE
-        const SUPABASE_URL = 'https://fceltmajcgvmjtmqmbuh.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q';
+        // Инициализация Supabase
+        const _supabase = supabase.createClient('https://fceltmajcgvmjtmqmbuh.supabase.co', 'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q');
 
-        // Проверяем наличие библиотеки перед созданием клиента
-        let _supabase;
-        if (window.supabase) {
-            _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        } else {
-            console.error("Supabase library not loaded!");
-        }
-
-        const modal = document.getElementById('modalReg');
+        const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
         const hat = document.getElementById('mainHat');
-        const submitBtn = document.getElementById('submitBtn');
+        const modal = document.getElementById('modalReg');
+        let isLoginMode = true;
 
-        // Открытие/Закрытие окна
-        function toggleModal() {
-            if (modal) {
-                modal.classList.toggle('active');
-            }
+        function showView(viewName) {
+            Object.values(blocks).forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById(blocks[viewName]).style.display = 'block';
         }
 
-        // РЕГИСТРАЦИЯ
-        async function handleReg(e) {
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Создать аккаунт';
+            document.getElementById('authSub').innerText = isLoginMode ? 'Введите данные вашего аккаунта' : 'Ваш персональный прогресс обучения';
+            document.getElementById('submitBtn').innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+            document.getElementById('switchBtn').innerText = isLoginMode ? 'Нет аккаунта? Создать' : 'Уже есть аккаунт? Войти';
+        }
+
+        function toggleModal() { modal.classList.toggle('active'); }
+
+        // 1. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
+        async function handleAuth(e) {
             e.preventDefault();
-            
-            if (!_supabase) {
-                alert("Ошибка соединения с базой данных");
-                return;
-            }
-
+            const btn = document.getElementById('submitBtn');
             const email = document.getElementById('login').value;
-            const password = document.getElementById('pass').value;
-            
-            // Визуальный фидбек
-            submitBtn.innerText = "Загрузка...";
-            submitBtn.disabled = true;
+            const pass = document.getElementById('pass').value;
+            btn.innerText = "Загрузка...";
+            btn.disabled = true;
 
-            try {
-                const { data, error } = await _supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
+            const { data, error } = isLoginMode 
+                ? await _supabase.auth.signInWithPassword({ email, password: pass })
+                : await _supabase.auth.signUp({ email, password: pass });
 
-                if (error) throw error;
-
-                // Успех!
-                toggleModal(); // Закрываем окно
-                
-                // Прыжок шапки
-                setTimeout(() => {
-                    hat.classList.add('success-jump');
-                    setTimeout(() => {
-                        hat.classList.remove('success-jump');
-                    }, 1000);
-                }, 300);
-
-                alert("Регистрация прошла успешно!");
-
-            } catch (err) {
-                alert("Ошибка: " + err.message);
-            } finally {
-                submitBtn.innerText = "Зарегистрироваться";
-                submitBtn.disabled = false;
+            if (error) {
+                alert("Ошибка: " + error.message);
+            } else {
+                toggleModal();
+                hat.classList.add('success-jump');
+                alert(isLoginMode ? "С возвращением!" : "Аккаунт создан!");
+                setTimeout(() => hat.classList.remove('success-jump'), 1000);
             }
+            btn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
+            btn.disabled = false;
         }
 
-        // Закрытие по клику на фон
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) toggleModal();
+        // 2. СБРОС ПАРОЛЯ (ОТПРАВКА ПИСЬМА)
+        async function handleResetPassword(e) {
+            e.preventDefault();
+            const btn = document.getElementById('resetBtn');
+            const email = document.getElementById('resetEmail').value;
+            btn.innerText = "Отправка...";
+            btn.disabled = true;
+
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href,
+            });
+
+            if (error) alert("Ошибка: " + error.message);
+            else alert("Инструкции отправлены! Проверьте почту (и папку СПАМ).");
+            
+            btn.innerText = "Отправить ссылку";
+            btn.disabled = false;
+            showView('auth');
+        }
+
+        // 3. СОХРАНЕНИЕ НОВОГО ПАРОЛЯ (ПОСЛЕ ПЕРЕХОДА ИЗ ПОЧТЫ)
+        async function handleUpdatePassword(e) {
+            e.preventDefault();
+            const btn = document.getElementById('updateBtn');
+            const pass = document.getElementById('newPass').value;
+            btn.innerText = "Сохранение...";
+            btn.disabled = true;
+
+            const { error } = await _supabase.auth.updateUser({ password: pass });
+
+            if (error) {
+                alert("Ошибка: " + error.message);
+            } else {
+                alert("Пароль успешно обновлен!");
+                showView('auth');
+                toggleModal();
+            }
+            btn.innerText = "Сохранить пароль";
+            btn.disabled = false;
+        }
+
+        // ЛОВИМ ВОЗВРАТ ИЗ ПОЧТЫ (ТИП RECOVERY)
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash.includes('type=recovery')) {
+                toggleModal();
+                showView('newPass');
+            }
         });
 
-        // Закрытие по ESC
-        window.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && modal.classList.contains('active')) toggleModal();
-        });
+        // Закрытие модалки по клику на фон
+        modal.addEventListener('click', (e) => { if (e.target === modal) toggleModal(); });
     </script>
 </body>
 </html>

@@ -33,6 +33,32 @@
             return new SupabaseAuthClient({ url: authUrl, headers: this.headers, storage: options.storage });
         }
     }
+                              from(tableName) {
+            const tableUrl = `${this.supabaseUrl}/rest/v1/${tableName}`;
+            return {
+                insert: async (data) => {
+                    const res = await fetch(tableUrl, {
+                        method: "POST",
+                        headers: { 
+                            ...this.headers, 
+                            "Content-Type": "application/json",
+                            "Prefer": "return=minimal" 
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    return { error: res.ok ? null : await res.json() };
+                },
+                select: async () => {
+                    const res = await fetch(tableUrl, {
+                        method: "GET",
+                        headers: this.headers
+                    });
+                    const data = await res.json();
+                    return { data: res.ok ? data : null, error: res.ok ? null : data };
+                }
+            };
+        }
+    }
     class SupabaseAuthClient {
         constructor(options) {
             this.url = options.url;

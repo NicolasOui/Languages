@@ -283,13 +283,28 @@
         };
 
         // --- СОХРАНЕНИЕ В БАЗУ ---
-        window.saveResult = async function(points) {
-            const { data: { user } } = await _supabase.auth.getUser();
-            if (!user) return;
-            await _supabase.from('test_results').insert({
-                user_id: user.id, test_name: 'Test 1', score: points, max_score: 100
-            });
-        };
+       window.saveResult = async function(points) {
+    if (!_supabase) {
+        console.error("Критическая ошибка: _supabase не инициализирован!");
+        return;
+    }
+
+    const { data: { user } } = await _supabase.auth.getUser();
+    if (!user) {
+        alert("Сначала войдите в аккаунт!");
+        return;
+    }
+
+    const { error } = await _supabase.from('test_results').insert({
+        user_id: user.id,
+        test_name: 'Test 1',
+        score: points,
+        max_score: 100
+    });
+
+    if (error) console.error("Ошибка сохранения:", error);
+    else console.log("✅ Результат сохранен!");
+};
 
         // --- АВТОРИЗАЦИЯ ---
         window.toggleModal = () => document.getElementById('modalReg').classList.toggle('active');
@@ -330,3 +345,4 @@
     </script>
 </body>
 </html>
+

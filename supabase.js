@@ -1,129 +1,54 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.supabase = {}));
-})(this, (function (exports) { 'use strict';
-
+    global.supabase = {};
+    factory(global.supabase);
+})(this, (function (exports) {
     class SupabaseClient {
-        constructor(supabaseUrl, supabaseKey, options = {}) {
-            this.supabaseUrl = supabaseUrl;
-            this.supabaseKey = supabaseKey;
+        constructor(url, key) {
+            this.url = url;
+            this.key = key;
             this.headers = { 
-                "X-Client-Info": "supabase-js/2.39.7", 
-                Authorization: `Bearer ${supabaseKey}`, 
-                apikey: supabaseKey, 
-                ...options.headers 
+                "Authorization": `Bearer ${key}`, 
+                "apikey": key, 
+                "Content-Type": "application/json" 
             };
-            this.auth = this._initAuth(options);
+            this.auth = new Auth(url, this.headers);
         }
-
-        _initAuth(options) {
-            const authUrl = `${this.supabaseUrl}/auth/v1`;
-            return new SupabaseAuthClient({ url: authUrl, headers: this.headers, storage: options.storage });
-        }
-
-        // МЕТОД ДЛЯ РАБОТЫ С ТАБЛИЦАМИ
-        from(tableName) {
-            const tableUrl = `${this.supabaseUrl}/rest/v1/${tableName}`;
+        from(table) {
+            const tUrl = `${this.url}/rest/v1/${table}`;
             return {
                 insert: async (data) => {
-                    const res = await fetch(tableUrl, {
+                    const r = await fetch(tUrl, {
                         method: "POST",
-                        headers: { 
-                            ...this.headers, 
-                            "Content-Type": "application/json",
-                            "Prefer": "return=minimal" 
-                        },
+                        headers: { ...this.headers, "Prefer": "return=minimal" },
                         body: JSON.stringify(data)
                     });
-                    const resData = res.ok ? null : await res.json();
-                    return { error: resData };
-                },
-                select: async () => {
-                    const res = await fetch(tableUrl, {
-                        method: "GET",
-                        headers: this.headers
-                    });
-                    const data = await res.json();
-                    return { data: res.ok ? data : null, error: res.ok ? null : data };
+                    return { error: r.ok ? null : await r.json() };
                 }
             };
         }
     }
-
-    class SupabaseAuthClient {
-        constructor(options) {
-            this.url = options.url;
-            this.headers = options.headers;
+    class Auth {
+        constructor(url, headers) {
+            this.u = `${url}/auth/v1`;
+            this.h = headers;
         }
-
+        async signUp(c) {
+            const r = await fetch(`${this.u}/signup`, { method: "POST", headers: this.h, body: JSON.stringify(c) });
+            const d = await r.json();
+            return { data: r.ok ? d : null, error: r.ok ? null : d };
+        }
+        async signInWithPassword(c) {
+            const r = await fetch(`${this.u}/token?grant_type=password`, { method: "POST", headers: this.h, body: JSON.stringify(c) });
+            const d = await r.json();
+            return { data: r.ok ? d : null, error: r.ok ? null : d };
+        }
         async getUser() {
-            try {
-                const res = await fetch(`${this.url}/user`, {
-                    method: "GET",
-                    headers: this.headers
-                });
-                const data = await res.json();
-                return { data: { user: res.ok ? data : null }, error: res.ok ? null : data };
-            } catch (e) {
-                return { data: { user: null }, error: e };
-            }
+            const r = await fetch(`${this.u}/user`, { headers: this.h });
+            const d = await r.json();
+            return { data: { user: r.ok ? d : null }, error: r.ok ? null : d };
         }
-
-        onAuthStateChange(callback) {
-            return { data: { subscription: { unsubscribe: () => {} } } };
-        }
-
-        async signUp(credentials) {
-            const res = await fetch(`${this.url}/signup`, {
-                method: "POST",
-                headers: { ...this.headers, "Content-Type": "application/json" },
-                body: JSON.stringify(credentials)
-            });
-            const data = await res.json();
-            return { data: res.ok ? data : null, error: res.ok ? null : data };
-        }
-
-        async signInWithPassword(credentials) {
-            const res = await fetch(`${this.url}/token?grant_type=password`, {
-                method: "POST",
-                headers: { ...this.headers, "Content-Type": "application/json" },
-                body: JSON.stringify(credentials)
-            });
-            const data = await res.json();
-            return { data: res.ok ? data : null, error: res.ok ? null : data };
-        }
-
-        async resetPasswordForEmail(email, options = {}) {
-            const res = await fetch(`${this.url}/recover`, {
-                method: "POST",
-                headers: { ...this.headers, "Content-Type": "application/json" },
-                body: JSON.stringify({ email, ...options })
-            });
-            const data = await res.json();
-            return { data: res.ok ? data : null, error: res.ok ? null : data };
-        }
-
-        async updateUser(attributes) {
-            const res = await fetch(`${this.url}/user`, {
-                method: "PUT",
-                headers: { ...this.headers, "Content-Type": "application/json" },
-                body: JSON.stringify(attributes)
-            });
-            const data = await res.json();
-            return { data: res.ok ? data : null, error: res.ok ? null : data };
-        }
-
-        async signOut() {
-            return { error: null };
-        }
+        onAuthStateChange(cb) { return { data: { subscription: { unsubscribe: () => {} } } }; }
+        async signOut() { return { error: null }; }
     }
-
-    const createClient = (supabaseUrl, supabaseKey, options = {}) => {
-        return new SupabaseClient(supabaseUrl, supabaseKey, options);
-    };
-
-    exports.createClient = createClient;
-    exports.SupabaseClient = SupabaseClient;
-    Object.defineProperty(exports, '__esModule', { value: true });
+    exports.createClient = (url, key) => new SupabaseClient(url, key);
 }));

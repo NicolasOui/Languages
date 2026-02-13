@@ -27,28 +27,14 @@
             };
         }
     }
-    class Auth {
-        constructor(url, headers) {
-            this.u = `${url}/auth/v1`;
-            this.h = headers;
-        }
-        async signUp(c) {
-            const r = await fetch(`${this.u}/signup`, { method: "POST", headers: this.h, body: JSON.stringify(c) });
+    async signUp({ email, password }) {
+            const r = await fetch(`${this.u}/signup`, { 
+                method: "POST", 
+                headers: this.h, 
+                body: JSON.stringify({ email, password }) // Явно передаем объект
+            });
             const d = await r.json();
             return { data: r.ok ? d : null, error: r.ok ? null : d };
         }
-        async signInWithPassword(c) {
-            const r = await fetch(`${this.u}/token?grant_type=password`, { method: "POST", headers: this.h, body: JSON.stringify(c) });
-            const d = await r.json();
-            return { data: r.ok ? d : null, error: r.ok ? null : d };
-        }
-        async getUser() {
-            const r = await fetch(`${this.u}/user`, { headers: this.h });
-            const d = await r.json();
-            return { data: { user: r.ok ? d : null }, error: r.ok ? null : d };
-        }
-        onAuthStateChange(cb) { return { data: { subscription: { unsubscribe: () => {} } } }; }
-        async signOut() { return { error: null }; }
-    }
     exports.createClient = (url, key) => new SupabaseClient(url, key);
 }));

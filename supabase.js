@@ -38,13 +38,21 @@
             this.url = options.url;
             this.headers = options.headers;
         }
-        async signUp(credentials) {
-            const res = await fetch(`${this.url}/signup`, {
-                method: "POST",
-                headers: { ...this.headers, "Content-Type": "application/json" },
-                body: JSON.stringify(credentials)
-            });
-            return await res.json();
+        async getUser() {
+            try {
+                const res = await fetch(`${this.url}/user`, {
+                    method: "GET",
+                    headers: this.headers
+                });
+                const data = await res.json();
+                return { data: { user: res.ok ? data : null }, error: res.ok ? null : data };
+            } catch (e) {
+                return { data: { user: null }, error: e };
+            }
+        }
+        onAuthStateChange(callback) {
+            console.log("Слушатель событий активен");
+            return { data: { subscription: { unsubscribe: () => {} } } };
         }
         async signInWithPassword(credentials) {
             const res = await fetch(`${this.url}/token?grant_type=password`, {

@@ -395,6 +395,41 @@
             if (error) alert(error.message);
             else { alert("Пароль обновлен!"); window.toggleModal(); window.showView('auth'); }
         };
+        // ФУНКЦИЯ СОХРАНЕНИЯ БАЛЛОВ В ТАБЛИЦУ
+async function saveResult(points) {
+    // 1. Узнаем, кто сейчас залогинен
+    const { data: { user }, error: userError } = await _supabase.auth.getUser();
+    
+    if (!user) {
+        showStatus("Войдите в аккаунт, чтобы сохранить результат!", true);
+        window.toggleModal(); // Открываем окно входа, если юзер не вошел
+        return;
+    }
+
+    // 2. Отправляем данные в созданную таблицу test_results
+    const { error } = await _supabase.from('test_results').insert({
+        user_id: user.id,
+        test_name: 'Подготовка DELF A1',
+        score: points,
+        max_score: 100
+    });
+
+    if (error) {
+        console.error("Ошибка сохранения:", error);
+        showStatus("Ошибка сохранения: " + error.message, true);
+    } else {
+        console.log("✅ Результат сохранен!");
+        showStatus("Ваш результат (" + points + ") сохранен!", false);
+        
+        // Маленький спецэффект - прыжок шапки при сохранении рекорда
+        const hat = document.getElementById('mainHat');
+        if (hat) {
+            hat.classList.add('success-jump');
+            setTimeout(() => hat.classList.remove('success-jump'), 1000);
+        }
+    }
+}
     </script>
 </body>
 </html>
+

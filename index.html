@@ -231,25 +231,96 @@
     </div>
 
     <script>
-        // 1. Инициализация из твоего сообщения
-        const _supabase = window.supabase ? supabase.createClient(
-            'https://fceltmajcgvmjtmqmbuh.supabase.co', 
-            'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
-        ) : null;
-
-        if (_supabase) {
-            console.log("✅ ЛОКАЛЬНАЯ БИБЛИОТЕКА РАБОТАЕТ!");
+    // 1. ФУНКЦИЯ ОТКРЫТИЯ ОКНА (Глобальная)
+    window.toggleModal = function() {
+        const modal = document.getElementById('modalReg');
+        if (modal) {
+            modal.classList.toggle('active');
         } else {
-            console.error("❌ Файл supabase.js пуст или не найден!");
+            console.error("Элемент modalReg не найден!");
+        }
+    };
+
+    // 2. ИНИЦИАЛИЗАЦИЯ БАЗЫ
+    const _supabase = window.supabase ? window.supabase.createClient(
+        'https://fceltmajcgvmjtmqmbuh.supabase.co', 
+        'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
+    ) : null;
+
+    if (_supabase) {
+        console.log("✅ ЛОКАЛЬНАЯ БИБЛИОТЕКА РАБОТАЕТ!");
+    } else {
+        console.error("❌ Библиотека supabase.js не загружена!");
+    }
+
+    let isLoginMode = true;
+
+    // 3. ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+    window.showView = function(viewName) {
+        const blocks = { auth: 'authBlock', reset: 'resetBlock', newPass: 'newPassBlock' };
+        Object.values(blocks).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        const target = document.getElementById(blocks[viewName]);
+        if (target) target.style.display = 'block';
+    };
+
+    window.toggleAuthMode = function() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Создать аккаунт';
+        document.getElementById('submitBtn').innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
+        document.getElementById('switchBtn').innerText = isLoginMode ? 'Нет аккаунта? Создать' : 'Уже есть аккаунт? Войти';
+    };
+
+    // 4. ЛОГИКА АВТОРИЗАЦИИ
+    window.handleAuth = async function(e) {
+        e.preventDefault();
+        if (!_supabase) {
+            alert("Ошибка: библиотека не подключена.");
+            return;
         }
 
-        // 2. Твои функции (handleAuth, toggleModal и т.д.)
-        function toggleModal() { ... }
-        async function handleAuth(e) { ... }
-        // ... и так далее
-    </script>
+        const btn = document.getElementById('submitBtn');
+        const email = document.getElementById('login').value;
+        const pass = document.getElementById('pass').value;
+        const hat = document.getElementById('mainHat');
+
+        btn.innerText = "Загрузка...";
+        btn.disabled = true;
+
+        const { error } = isLoginMode 
+            ? await _supabase.auth.signInWithPassword({ email, password: pass })
+            : await _supabase.auth.signUp({ email, password: pass });
+
+        if (error) {
+            alert("Ошибка: " + error.message);
+        } else {
+            window.toggleModal();
+            if (hat) {
+                hat.classList.add('success-jump');
+                setTimeout(() => hat.classList.remove('success-jump'), 1000);
+            }
+            alert(isLoginMode ? "Вы вошли!" : "Аккаунт создан!");
+        }
+        btn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
+        btn.disabled = false;
+    };
+
+    // 5. СОБЫТИЯ ЗАГРУЗКИ
+    window.addEventListener('load', () => {
+        if (window.location.hash.includes('type=recovery')) {
+            window.toggleModal();
+            window.showView('newPass');
+        }
+        const m = document.getElementById('modalReg');
+        if (m) m.addEventListener('click', (e) => { if (e.target === m) window.toggleModal(); });
+    });
+</script>
+
 </body>
 </html>
+
 
 
 

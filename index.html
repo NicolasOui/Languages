@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DELF A1 - Apprentissage & Préparation</title>
+    <!-- 1. ПОДКЛЮЧАЕМ БИБЛИОТЕКУ (ПЕРЕВОДЧИК) -->
+    <script src="https://cdn.jsdelivr.net"></script>
+    
     <style>
         :root {
             --primary: #2563eb;
@@ -30,7 +33,6 @@
             display: flex; flex-direction: column; align-items: center; text-align: center;
         }
 
-        /* ГЛАВНЫЙ ЗАГОЛОВОК */
         h1 {
             font-size: clamp(3.5rem, 12vw, 6rem);
             font-weight: 800; margin: 0;
@@ -48,7 +50,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* ЦЕНТРАЛЬНАЯ СЦЕНА */
         .scene {
             width: 300px; height: 300px;
             position: relative;
@@ -64,7 +65,6 @@
             transition: transform 0.5s var(--easing);
         }
 
-        /* Победный прыжок шапки (класс добавляется через JS) */
         .hat.success-jump {
             animation: none;
             transform: translateY(-100px) scale(1.3) rotate(360deg);
@@ -88,7 +88,6 @@
             50% { transform: translateY(-35px) rotate(5deg) scale(1.05); }
         }
 
-        /* КНОПКИ */
         .cta-stack { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
 
         .btn {
@@ -108,9 +107,6 @@
         .btn-reg { background: transparent; color: var(--text-sub); font-size: 0.95rem; margin-top: 10px; font-weight: 500; }
         .btn-reg:hover { color: var(--primary); text-decoration: underline; }
 
-        .btn:active { transform: scale(0.94) !important; }
-
-        /* МОДАЛЬНОЕ ОКНО (ИСПРАВЛЕНО: МОНОЛИТНОЕ ЗАКРЫТИЕ) */
         .modal-overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -148,7 +144,6 @@
             width: 100%; padding: 18px; border-radius: 14px;
             border: 2px solid #f1f5f9; background: #f8fafc;
             font-size: 1rem; font-family: inherit;
-            /* Убрано transition: all, чтобы поля не отставали при закрытии */
             transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -178,7 +173,6 @@
 
         <div class="scene">
             <div class="hat" id="mainHat">🎓</div>
-            <!-- Магические частицы -->
             <div class="sparkle" style="--x: -60px; left: 40%; animation-delay: 0s;"></div>
             <div class="sparkle" style="--x: 50px; left: 50%; animation-delay: 0.4s;"></div>
             <div class="sparkle" style="--x: -20px; left: 60%; animation-delay: 0.8s;"></div>
@@ -193,7 +187,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
     <div class="modal-overlay" id="modalReg">
         <div class="modal-content">
             <button class="close-btn" onclick="toggleModal()">&times;</button>
@@ -202,36 +195,61 @@
             
             <form onsubmit="handleReg(event)">
                 <div class="input-group">
-                    <input type="text" id="login" placeholder="Логин" required autocomplete="username">
+                    <input type="email" id="login" placeholder="Email" required autocomplete="email">
                 </div>
                 <div class="input-group">
                     <input type="password" id="pass" placeholder="Пароль" required autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn btn-prep">Зарегистрироваться</button>
+                <button type="submit" id="submitBtn" class="btn btn-prep">Зарегистрироваться</button>
             </form>
         </div>
     </div>
 
     <script>
+        // 2. ИНИЦИАЛИЗАЦИЯ SUPABASE
+        const _supabase = supabase.createClient(
+            'https://fceltmajcgvmjtmqmbuh.supabase.co', 
+            'sb_publishable_9arN0yQwPf1N8zSh30VjFA_SSUR3P5Q'
+        );
+
         const modal = document.getElementById('modalReg');
         const hat = document.getElementById('mainHat');
+        const submitBtn = document.getElementById('submitBtn');
 
         function toggleModal() {
             modal.classList.toggle('active');
         }
 
-        function handleReg(e) {
+        // 3. ФУНКЦИЯ РЕГИСТРАЦИИ
+        async function handleReg(e) {
             e.preventDefault();
-            // Закрываем монолитно
-            modal.classList.remove('active');
             
-            // Праздничный прыжок шапки
-            setTimeout(() => {
-                hat.classList.add('success-jump');
+            const email = document.getElementById('login').value;
+            const password = document.getElementById('pass').value;
+            
+            submitBtn.innerText = "Загрузка...";
+            submitBtn.disabled = true;
+
+            const { data, error } = await _supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert("Ошибка: " + error.message);
+                submitBtn.innerText = "Зарегистрироваться";
+                submitBtn.disabled = false;
+            } else {
+                toggleModal();
+                // Победный прыжок шапки
                 setTimeout(() => {
-                    hat.classList.remove('success-jump');
-                }, 1000);
-            }, 300);
+                    hat.classList.add('success-jump');
+                    setTimeout(() => {
+                        hat.classList.remove('success-jump');
+                    }, 1000);
+                }, 300);
+                alert("Успешно! Проверьте почту для подтверждения (если не отключили в настройках)");
+            }
         }
 
         modal.addEventListener('click', (e) => {

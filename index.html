@@ -248,21 +248,35 @@
 
         // --- ЛОГИКА ТЕСТОВ ---
         window.startTest = function(id) {
-            if(id !== 1) return;
-            document.getElementById('testListScreen').style.display = 'none';
-            document.getElementById('testActiveScreen').style.display = 'flex';
-            document.getElementById('testTitle').innerText = "Test 1: L'invitation";
-            document.getElementById('testContent').innerHTML = `
-                <p style="color: var(--text-sub);">Прочитайте сообщение:</p>
-                <p><strong>"Salut! Je t'invite pour mon anniversaire samedi à 19h00. À bientôt, Marc."</strong></p>
-                <p>Quand est la fête ?</p>`;
-            
-            const options = [
-                { t: "A) Vendredi 17h00", c: false },
-                { t: "B) Samedi 19h00", c: true },
-                { t: "C) Dimanche 10h00", c: false }
-            ];
-            
+    document.getElementById('testListScreen').style.display = 'none';
+    document.getElementById('testActiveScreen').style.display = 'flex';
+    
+    const stack = document.getElementById('optionsStack');
+    const content = document.getElementById('testContent');
+    const title = document.getElementById('testTitle');
+    stack.innerHTML = "";
+
+    if (id === 1) {
+        title.innerText = "Test 1: L'invitation ✉️";
+        content.innerHTML = `<p><strong>"Salut! Je t'invite pour mon anniversaire samedi à 19h00. À bientôt, Marc."</strong></p><p>Quand est la fête ?</p>`;
+        renderOptions([
+            { t: "A) Vendredi 17h00", c: false },
+            { t: "B) Samedi 19h00", c: true },
+            { t: "C) Dimanche 10h00", c: false }
+        ]);
+    } else if (id === 2) {
+        title.innerText = "Test 2: Au restaurant 🍕";
+        content.innerHTML = `<p>Serveur: <strong>"Bonjour ! Вы желаете кофе (Vous désirez un café) ?"</strong></p><p>Что ответит клиент?</p>`;
+        renderOptions([
+            { t: "A) Oui, un café s'il vous plaît", c: true },
+            { t: "B) Je m'appelle Marc", c: false },
+            { t: "C) J'ai 20 ans", c: false }
+        ]);
+    }
+};
+
+        // Вспомогательная функция для отрисовки кнопок
+function renderOptions(options) { 
             const stack = document.getElementById('optionsStack');
             stack.innerHTML = "";
             options.forEach(opt => {
@@ -345,4 +359,5 @@
     </script>
 </body>
 </html>
+
 
